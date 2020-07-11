@@ -17,6 +17,7 @@ final class PushHooks {
 	 *
 	 * @since 0.1
 	 *
+	 * @param AdminLinks &$admin_links_tree
 	 * @return true
 	 */
 	public static function addToAdminLinks( &$admin_links_tree ) {

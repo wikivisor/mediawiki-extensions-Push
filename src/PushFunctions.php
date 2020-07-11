@@ -37,8 +37,8 @@ final class PushFunctions {
 	 *
 	 * @since 0.4
 	 *
-	 * @param $inputPages array list of titles to look up
-	 * @param $pageSet array associative array indexed by titles for output
+	 * @param array $inputPages list of titles to look up
+	 * @param array $pageSet associative array indexed by titles for output
 	 *
 	 * @return array associative array index by titles
 	 */
@@ -54,6 +54,12 @@ final class PushFunctions {
 	 * Expand a list of pages to include items used in those pages.
 	 *
 	 * @since 0.4
+	 * @param array $inputPages
+	 * @param array $pageSet
+	 * @param string $table
+	 * @param array $fields
+	 * @param array $join
+	 * @return array
 	 */
 	protected static function getLinks( $inputPages, $pageSet, $table, $fields, $join ) {
 		$dbr = wfGetDB( DB_REPLICA );
