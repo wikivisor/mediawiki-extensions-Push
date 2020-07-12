@@ -140,8 +140,7 @@
 	},
 	"Hooks": {
 		"UnknownAction": "PushTab::onUnknownAction",
-		"SkinTemplateTabs": "PushTab::displayTab",
-		"SkinTemplateNavigation": "PushTab::displayTab2",
+		"SkinTemplateNavigation": "PushTab::displayTab",
 		"AdminLinks": "PushHooks::addToAdminLinks"
 	},
 	"config_prefix": "eg",

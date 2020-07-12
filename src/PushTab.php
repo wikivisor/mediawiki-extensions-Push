@@ -15,11 +15,10 @@ final class PushTab {
 	/**
 	 * Adds an "action" (i.e., a tab) to allow pushing the current article.
 	 * @param Skin $obj
-	 * @param array &$content_actions
-	 * @return bool
+	 * @param array &$links
 	 */
-	public static function displayTab( $obj, &$content_actions ) {
-		global $wgUser, $egPushTargets;
+	public static function displayTab( $obj, &$links ) {
+		global $wgUser, $egPushTargets, $egPushShowTab;
 
 		/**
 		 * Make sure that this is not a special page, the page has contents, and the user can push.
@@ -35,32 +34,14 @@ final class PushTab {
 
 			global $wgRequest;
 
-			$content_actions['push'] = [
+			$location = $egPushShowTab ? 'views' : 'actions';
+
+			$links[$location]['push'] = [
 				'text' => wfMessage( 'push-tab-text' )->text(),
 				'class' => $wgRequest->getVal( 'action' ) == 'push' ? 'selected' : '',
 				'href' => $title->getLocalURL( 'action=push' )
 			];
 		}
-
-		return true;
-	}
-
-	/**
-	 * Function currently called only for the 'Vector' skin, added in
-	 * MW 1.16 - will possibly be called for additional skins later
-	 * @param Skin $obj
-	 * @param array &$links
-	 * @return bool
-	 */
-	public static function displayTab2( $obj, &$links ) {
-		global $egPushShowTab;
-
-		// The old '$content_actions' array is thankfully just a sub-array of this one
-		$views_links = $links[$egPushShowTab ? 'views' : 'actions'];
-		self::displayTab( $obj, $views_links );
-		$links[$egPushShowTab ? 'views' : 'actions'] = $views_links;
-
-		return true;
 	}
 
 	/**
