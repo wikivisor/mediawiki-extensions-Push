@@ -18,7 +18,11 @@ class ApiPush extends ApiPushBase {
 		parent::__construct( $main, $action );
 	}
 
-	public function doModuleExecute() {
+	/**
+	 * @param array $targetsForProcessing We have to process defined targets only for security reasons
+	 * @throws ApiUsageException
+	 */
+	public function doModuleExecute( array $targetsForProcessing ) {
 		$params = $this->extractRequestParams();
 
 		foreach ( $params['page'] as $page ) {
@@ -27,7 +31,7 @@ class ApiPush extends ApiPushBase {
 			$revision = $this->getPageRevision( $title );
 
 			if ( $revision !== false ) {
-				$this->doPush( $title, $revision, $params['targets'] );
+				$this->doPush( $title, $revision, $targetsForProcessing );
 			}
 		}
 
@@ -91,10 +95,10 @@ class ApiPush extends ApiPushBase {
 				&& count( $response['query']['pages'][$first]['revisions'] ) > 0 ) {
 				$revision = $response['query']['pages'][$first]['revisions'][0];
 			} else {
-				$this->dieUsage( wfMessage( 'push-special-err-pageget-failed' )->text(), 'page-get-failed' );
+				$this->dieWithError( wfMessage( 'push-special-err-pageget-failed' )->text(), 'page-get-failed' );
 			}
 		} else {
-			$this->dieUsage( wfMessage( 'push-special-err-pageget-failed' )->text(), 'page-get-failed' );
+			$this->dieWithError( wfMessage( 'push-special-err-pageget-failed' )->text(), 'page-get-failed' );
 		}
 
 		return $revision;
@@ -111,7 +115,7 @@ class ApiPush extends ApiPushBase {
 	 */
 	protected function doPush( Title $title, array $revision, array $targets ) {
 		foreach ( $targets as $target ) {
-			$token = $this->getEditToken( $target );
+			$token = $this->getToken( $target, 'csrf' );
 
 			if ( $token !== false ) {
 				$doPush = true;
@@ -173,7 +177,7 @@ class ApiPush extends ApiPushBase {
 			$this->editResponses[] = $response;
 			Hooks::run( 'PushAPIAfterPush', [ $title, $revision, $target, $token, $response ] );
 		} else {
-			$this->dieUsage( wfMessage( 'push-special-err-push-failed' )->text(), 'page-push-failed' );
+			$this->dieWithError( wfMessage( 'push-special-err-push-failed' )->text(), 'page-push-failed' );
 		}
 	}
 

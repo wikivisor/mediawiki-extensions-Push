@@ -1,113 +1,77 @@
 <?php
 
-/**
- * Static class with methods to create and handle the push tab.
- *
- * @since 0.1
- *
- * @file Push_Tab.php
- * @ingroup Push
- *
- * @author Jeroen De Dauw < jeroendedauw@gmail.com >
- */
-final class PushTab {
+use MediaWiki\MediaWikiServices;
+
+class PushAction extends Action {
 
 	/**
-	 * Adds an "action" (i.e., a tab) to allow pushing the current article.
-	 * @param Skin $obj
-	 * @param array &$links
+	 * @var GlobalVarConfig
 	 */
-	public static function displayTab( $obj, &$links ) {
-		global $wgUser, $egPushTargets, $egPushShowTab;
+	private $pushConfig;
 
-		/**
-		 * Make sure that this is not a special page, the page has contents, and the user can push.
-		 *
-		 * @var Title $title
-		 */
-		$title = $obj->getTitle();
-		if (
-			$title->getNamespace() !== NS_SPECIAL
-			&& $title->exists()
-			&& $wgUser->isAllowed( 'push' )
-			&& count( $egPushTargets ) > 0 ) {
-
-			global $wgRequest;
-
-			$location = $egPushShowTab ? 'views' : 'actions';
-
-			$links[$location]['push'] = [
-				'text' => wfMessage( 'push-tab-text' )->text(),
-				'class' => $wgRequest->getVal( 'action' ) == 'push' ? 'selected' : '',
-				'href' => $title->getLocalURL( 'action=push' )
-			];
-		}
+	public function __construct( Page $page, IContextSource $context = null ) {
+		parent::__construct( $page, $context );
+		// TODO get rid of eg prefix
+		$this->pushConfig = new GlobalVarConfig( 'egPush' );
 	}
 
 	/**
-	 * Handle actions not known to MediaWiki. If the action is push,
-	 * display the push page by calling the displayPushPage method.
-	 *
-	 * @param string $action
-	 * @param Article $article
-	 *
-	 * @return true
+	 * @inheritDoc
 	 */
-	public static function onUnknownAction( $action, Article $article ) {
-		if ( $action !== 'push' ) {
-			return true;
-		}
+	public function getName() {
+		return 'push';
+	}
 
-		return self::displayPushPage( $article );
+	public function getRestriction() {
+		return 'push';
+	}
+
+	public function requiresWrite() {
+		return false;
 	}
 
 	/**
-	 * The function called if we're in index.php (as opposed to one of the
-	 * special pages)
-	 *
-	 * @since 0.1
-	 * @param Article $article
-	 * @return bool
-	 * @throws PermissionsError
+	 * @inheritDoc
 	 */
-	public static function displayPushPage( Article $article ) {
-		global $wgOut, $wgUser, $wgTitle, $wgSitename, $egPushTargets;
+	public function show() {
+		global $wgSitename;
+		$output = $this->getOutput();
+		$title = $this->getTitle();
+		$pushTargets = $this->pushConfig->get( 'Targets' );
 
-		$wgOut->setPageTitle( wfMessage( 'push-tab-title', $article->getTitle()->getText() )->parse() );
+		$output->setPageTitle( wfMessage( 'push-tab-title', $title->getText() )->parse() );
 
-		if ( !$wgUser->isAllowed( 'push' ) ) {
+		// Probably duplicate of getRestriction()
+		if ( !$this->userHasRight( 'push' ) ) {
 			throw new PermissionsError( 'push' );
 		}
 
-		$wgOut->addHTML( '<p>' . wfMessage( 'push-tab-desc' )->escaped() . '</p>' );
+		$output->addHTML( '<p>' . wfMessage( 'push-tab-desc' )->escaped() . '</p>' );
 
-		if ( count( $egPushTargets ) == 0 ) {
-			$wgOut->addHTML( '<p>' . wfMessage( 'push-tab-no-targets' )->escaped() . '</p>' );
+		if ( count( $pushTargets ) == 0 ) {
+			$output->addHTML( '<p>' . wfMessage( 'push-tab-no-targets' )->escaped() . '</p>' );
 			return false;
 		}
 
-		$wgOut->addModules( 'ext.push.tab' );
+		$output->addModules( 'ext.push.tab' );
 
-		$wgOut->addHTML(
-			Html::hidden( 'pageName', $wgTitle->getFullText(), [ 'id' => 'pageName' ] ) .
+		$output->addHTML(
+			Html::hidden( 'pageName', $title->getFullText(), [ 'id' => 'pageName' ] ) .
 			Html::hidden( 'siteName', $wgSitename, [ 'id' => 'siteName' ] )
 		);
 
-		self::displayPushList();
-
-		self::displayPushOptions();
-
+		$this->displayPushList( $pushTargets );
+		$this->displayPushOptions();
 		return false;
 	}
 
 	/**
 	 * Displays a list with all targets to which can be pushed.
 	 *
+	 * @param array $pushTargets
 	 * @since 0.1
 	 */
-	protected static function displayPushList() {
-		global $wgOut, $egPushTargets;
-
+	private function displayPushList( array $pushTargets ) {
 		$items = [
 			Html::rawElement(
 				'tr',
@@ -130,19 +94,19 @@ final class PushTab {
 			)
 		];
 
-		foreach ( $egPushTargets as $name => $url ) {
-			$items[] = self::getPushItem( $name, $url );
+		foreach ( $pushTargets as $name => $url ) {
+			$items[] = $this->getPushItem( $name, $url );
 		}
 
 		// If there is more then one item, display the 'push all' row.
-		if ( count( $egPushTargets ) > 1 ) {
+		if ( count( $pushTargets ) > 1 ) {
 			$items[] = Html::rawElement(
 				'tr',
 				[],
 				Html::element(
 					'th',
 					[ 'colspan' => 2, 'style' => 'text-align: left' ],
-					wfMessage( 'push-targets-total' )->numParams( count( $egPushTargets ) )->parse()
+					wfMessage( 'push-targets-total' )->numParams( count( $pushTargets ) )->parse()
 				) .
 				Html::rawElement(
 					'th',
@@ -159,7 +123,7 @@ final class PushTab {
 			);
 		}
 
-		$wgOut->addHTML(
+		$this->getOutput()->addHTML(
 			Html::rawElement(
 				'table',
 				[ 'class' => 'wikitable', 'width' => '50%' ],
@@ -171,19 +135,17 @@ final class PushTab {
 	/**
 	 * Returns the HTML for a single push target.
 	 *
-	 * @since 0.1
-	 *
 	 * @param string $name
 	 * @param string $url
 	 *
 	 * @return string
+	 * @since 0.1
 	 */
-	protected static function getPushItem( $name, $url ) {
-		global $wgTitle;
-
+	private function getPushItem( string $name, string $url ) {
 		static $targetId = 0;
 		$targetId++;
 
+		$title = $this->getTitle();
 		return Html::rawElement(
 			'tr',
 			[],
@@ -198,11 +160,11 @@ final class PushTab {
 				Html::element(
 					'a',
 					[
-						'href' => $url . '/index.php?title=' . $wgTitle->getFullText(),
+						'href' => $url . '/index.php?title=' . $title->getFullText(),
 						'rel' => 'nofollow',
 						'id' => 'targetlink' . $targetId
 					],
-					wfMessage( 'push-remote-page-link', $wgTitle->getFullText(), $name )->parse()
+					wfMessage( 'push-remote-page-link', $title->getFullText(), $name )->parse()
 				) .
 				Html::element(
 					'div',
@@ -256,25 +218,24 @@ final class PushTab {
 	 *
 	 * @since 0.4
 	 */
-	protected static function displayPushOptions() {
-		global $wgOut, $wgUser, $wgTitle;
+	private function displayPushOptions() {
+		$this->getOutput()->addHTML( '<h3>' . wfMessage( 'push-tab-push-options' )->escaped() . '</h3>' );
 
-		$wgOut->addHTML( '<h3>' . wfMessage( 'push-tab-push-options' )->escaped() . '</h3>' );
-
+		$title = $this->getTitle();
 		$usedTemplates = array_keys(
 			PushFunctions::getTemplates(
-				[ $wgTitle->getFullText() ],
-				[ $wgTitle->getFullText() => true ]
+				[ $title->getFullText() ],
+				[ $title->getFullText() => true ]
 			)
 		);
 
 		// Get rid of the page itself.
 		array_shift( $usedTemplates );
 
-		self::displayIncTemplatesOption( $usedTemplates );
+		$this->displayIncTemplatesOption( $usedTemplates );
 
-		if ( $wgUser->isAllowed( 'filepush' ) ) {
-			self::displayIncFilesOption( $usedTemplates );
+		if ( $this->userHasRight( 'filepush' ) ) {
+			$this->displayIncFilesOption( $usedTemplates );
 		}
 	}
 
@@ -285,20 +246,21 @@ final class PushTab {
 	 *
 	 * @param array $templates
 	 */
-	protected static function displayIncTemplatesOption( array $templates ) {
-		global $wgOut, $wgLang, $egPushIncTemplates;
-
-		$wgOut->addJsConfigVars( 'wgPushTemplates', $templates );
+	private function displayIncTemplatesOption( array $templates ) {
+		$output = $this->getOutput();
+		$output->addJsConfigVars( 'wgPushTemplates', $templates );
 
 		foreach ( $templates as &$template ) {
 			$template = "[[$template]]";
 		}
 
-		$wgOut->addHTML(
+		$pushIncTemplates = $this->pushConfig->get( 'IncTemplates' );
+		$lang = $this->getLanguage();
+		$output->addHTML(
 			Html::rawElement(
 				'div',
 				[ 'id' => 'divIncTemplates', 'style' => 'display: table-row' ],
-				Xml::check( 'checkIncTemplates', $egPushIncTemplates, [ 'id' => 'checkIncTemplates' ] ) .
+				Xml::check( 'checkIncTemplates', $pushIncTemplates, [ 'id' => 'checkIncTemplates' ] ) .
 				Html::element(
 					'label',
 					[ 'id' => 'lblIncTemplates', 'for' => 'checkIncTemplates' ],
@@ -310,8 +272,8 @@ final class PushTab {
 					[ 'style' => 'display:none; opacity:0', 'id' => 'txtTemplateList' ],
 					count( $templates ) > 0 ?
 						wfMessage( 'push-tab-used-templates',
-							$wgLang->listToText( $templates ), count( $templates ) )->parse() :
-							wfMessage( 'push-tab-no-used-templates' )->escaped()
+							$lang->listToText( $templates ), count( $templates ) )->parse() :
+						wfMessage( 'push-tab-no-used-templates' )->escaped()
 				)
 			)
 		);
@@ -324,10 +286,8 @@ final class PushTab {
 	 *
 	 * @param array $templates
 	 */
-	protected static function displayIncFilesOption( array $templates ) {
-		global $wgOut, $wgTitle, $egPushIncFiles, $wgScript;
-
-		$allFiles = self::getImagesForPages( [ $wgTitle->getFullText() ] );
+	private function displayIncFilesOption( array $templates ) {
+		$allFiles = self::getImagesForPages( [ $this->getTitle()->getFullText() ] );
 		$templateFiles = self::getImagesForPages( $templates );
 		$pageFiles = [];
 
@@ -337,17 +297,19 @@ final class PushTab {
 			}
 		}
 
-		$wgOut->addInlineScript(
-			'var wgPushPageFiles = ' . FormatJson::encode( $pageFiles ) . ';' .
-			'var wgPushTemplateFiles = ' . FormatJson::encode( $templateFiles ) . ';' .
-			'var wgPushIndexPath = ' . FormatJson::encode( $wgScript )
-		);
+		$output = $this->getOutput();
+		$pushIncFiles = $this->pushConfig->get( 'IncFiles' );
+		$output->addJsConfigVars( [
+			'wgPushPageFiles' => $pageFiles,
+			'wgPushTemplateFiles' => $templateFiles,
+			'wgPushIndexPath' => wfScript(),
+		] );
 
-		$wgOut->addHTML(
+		$output->addHTML(
 			Html::rawElement(
 				'div',
 				[ 'id' => 'divIncFiles', 'style' => 'display: table-row' ],
-				Xml::check( 'checkIncFiles', $egPushIncFiles, [ 'id' => 'checkIncFiles' ] ) .
+				Xml::check( 'checkIncFiles', $pushIncFiles, [ 'id' => 'checkIncFiles' ] ) .
 				Html::element(
 					'label',
 					[ 'id' => 'lblIncFiles', 'for' => 'checkIncFiles' ],
@@ -410,4 +372,13 @@ final class PushTab {
 		return array_unique( $images );
 	}
 
+	/**
+	 * Testing a permission for current user
+	 * @param string $action
+	 * @return bool
+	 */
+	private function userHasRight( string $action ) {
+		$pm = MediaWikiServices::getInstance()->getPermissionManager();
+		return $pm->userHasRight( $this->getUser(), $action );
+	}
 }

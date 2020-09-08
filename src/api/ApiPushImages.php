@@ -16,13 +16,16 @@ class ApiPushImages extends ApiPushBase {
 		parent::__construct( $main, $action );
 	}
 
-	public function doModuleExecute() {
+	/**
+	 * @param array $targetsForProcessing We have to process defined targets only for security reasons
+	 */
+	public function doModuleExecute( array $targetsForProcessing ) {
 		$params = $this->extractRequestParams();
 
 		foreach ( $params['images'] as $image ) {
 			$title = Title::newFromText( $image, NS_FILE );
 			if ( $title !== null && $title->getNamespace() == NS_FILE && $title->exists() ) {
-				$this->doPush( $title, $params['targets'] );
+				$this->doPush( $title, $targetsForProcessing );
 			}
 		}
 	}
@@ -37,7 +40,7 @@ class ApiPushImages extends ApiPushBase {
 	 */
 	protected function doPush( Title $title, array $targets ) {
 		foreach ( $targets as $target ) {
-			$token = $this->getEditToken( $target );
+			$token = $this->getToken( $target, 'csrf' );
 
 			if ( $token !== false ) {
 				$doPush = true;
@@ -79,7 +82,11 @@ class ApiPushImages extends ApiPushBase {
 			$localFile = $be->getLocalReference(
 				[ 'src' => $file->getPath() ]
 			);
-			$requestData['file'] = '@' . $localFile->getPath();
+			if ( function_exists( 'curl_file_create' ) ) {
+				$requestData['file'] = curl_file_create( $localFile->getPath() );
+			} else {
+				$requestData['file'] = '@' . $localFile->getPath();
+			}
 		} else {
 			$requestData['url'] = $imagePage->getDisplayedFile()->getFullUrl();
 		}
@@ -92,7 +99,7 @@ class ApiPushImages extends ApiPushBase {
 
 		if ( $egPushDirectFileUploads ) {
 			if ( !function_exists( 'curl_init' ) ) {
-				$this->dieUsage(
+				$this->dieWithError(
 					wfMessage( 'push-api-err-nocurl' )->text(),
 					'image-push-nocurl'
 				);
@@ -100,7 +107,7 @@ class ApiPushImages extends ApiPushBase {
 				!defined( 'CurlHttpRequest::SUPPORTS_FILE_POSTS' )
 				|| !CurlHttpRequest::SUPPORTS_FILE_POSTS
 			) {
-				$this->dieUsage(
+				$this->dieWithError(
 					wfMessage( 'push-api-err-nofilesupport' )->text(),
 					'image-push-nofilesupport'
 				);
@@ -118,6 +125,8 @@ class ApiPushImages extends ApiPushBase {
 			$req->setCookieJar( $this->cookieJars[$target] );
 		}
 
+		$req->setHeader( 'Content-Type', 'multipart/form-data' );
+
 		$status = $req->execute();
 
 		if ( $status->isOK() ) {
@@ -131,7 +140,7 @@ class ApiPushImages extends ApiPushBase {
 
 			Hooks::run( 'PushAPIAfterImagePush', [ $title, $target, $token, $response ] );
 		} else {
-			$this->dieUsage( wfMessage( 'push-special-err-push-failed' )->text(), 'page-push-failed' );
+			$this->dieWithError( wfMessage( 'push-special-err-push-failed' )->text(), 'page-push-failed' );
 		}
 	}
 
