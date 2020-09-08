@@ -11,6 +11,11 @@ abstract class ApiPushBase extends ApiBase {
 	 */
 	protected $cookieJars = [];
 
+	/** @inheritDoc */
+	public function needsToken() {
+		return 'csrf';
+	}
+
 	/**
 	 * Logs in into a target wiki using the provided username and password.
 	 *
@@ -32,7 +37,7 @@ abstract class ApiPushBase extends ApiBase {
 			'action' => 'login',
 			'format' => 'json',
 			'lgname' => $user,
-			'lgpassword' => $password
+			'lgpassword' => $password,
 		];
 		if ( $domain != false ) {
 			$requestData['lgdomain'] = $domain;
@@ -60,7 +65,7 @@ abstract class ApiPushBase extends ApiBase {
 		$attemtNr++;
 
 		if ( !$status->isOK() ) {
-			$this->dieUsage(
+			$this->dieWithError(
 				wfMessage( 'push-err-authentication', $target, '' )->parse(),
 				'authentication-failed'
 			);
@@ -69,26 +74,27 @@ abstract class ApiPushBase extends ApiBase {
 		$response = FormatJson::decode( $req->getContent() );
 
 		if ( !property_exists( $response, 'login' ) || !property_exists( $response->login, 'result' ) ) {
-			$this->dieUsage(
+			$this->dieWithError(
 				wfMessage( 'push-err-authentication', $target, '' )->parse(),
 				'authentication-failed'
 			);
 		}
 
 		if ( $response->login->result == 'NeedToken' && $attemtNr < 3 ) {
+			$loginToken = $response->login->token ?? $this->getToken( $target, 'login' );
 			$this->doLogin(
 				$user,
 				$password,
 				$domain,
 				$target,
-				$response->login->token,
+				$loginToken,
 				$req->getCookieJar(),
 				$attemtNr
 			);
 		} elseif ( $response->login->result == 'Success' ) {
 			$this->cookieJars[$target] = $req->getCookieJar();
 		} else {
-			$this->dieUsage(
+			$this->dieWithError(
 				wfMessage( 'push-err-authentication', $target, '' )->parse(),
 				'authentication-failed'
 			);
@@ -96,21 +102,22 @@ abstract class ApiPushBase extends ApiBase {
 	}
 
 	/**
-	 * Obtains the needed edit token by making an HTTP GET request
+	 * Obtains the needed token by making an HTTP GET request
 	 * to the remote wikis API.
 	 *
+	 * @param string $target
+	 * @param string $type
+	 * @return string|false
+	 * @throws ApiUsageException
 	 * @since 0.3
 	 *
-	 * @param string $target
-	 *
-	 * @return string|false
 	 */
-	protected function getEditToken( $target ) {
+	protected function getToken( string $target, string $type ) {
 		$requestData = [
 			'action' => 'query',
 			'format' => 'json',
 			'meta' => 'tokens',
-			'type' => 'csrf',
+			'type' => $type,
 		];
 
 		$req = MWHttpRequest::factory( wfAppendQuery( $target, $requestData ),
@@ -130,29 +137,29 @@ abstract class ApiPushBase extends ApiBase {
 		$response = $status->isOK() ? FormatJson::decode( $req->getContent() ) : null;
 
 		$token = false;
-
+		$tokenKey = $type . 'token';
 		if (
 			$response === null
 			|| !property_exists( $response, 'query' )
 			|| !property_exists( $response->query, 'tokens' )
-			|| count( $response->query->tokens ) !== 1
+			|| !property_exists( $response->query->tokens, $tokenKey )
 		) {
-			$this->dieUsage(
+			$this->dieWithError(
 				wfMessage( 'push-special-err-token-failed' )->text(),
 				'token-request-failed'
 			);
 		}
 
-		if ( property_exists( $response->query->tokens, 'csrftoken' ) ) {
-			$token = $response->query->tokens->csrftoken;
+		if ( property_exists( $response->query->tokens, $tokenKey ) ) {
+			$token = $response->query->tokens->{$tokenKey};
 		} elseif (
 			$response !== null
 			&& property_exists( $response, 'query' )
 			&& property_exists( $response->query, 'error' )
 		) {
-			$this->dieUsage( $response->query->error->message, 'token-request-failed' );
+			$this->dieWithError( $response->query->error->message, 'token-request-failed' );
 		} else {
-			$this->dieUsage(
+			$this->dieWithError(
 				wfMessage( 'push-special-err-token-failed' )->text(),
 				'token-request-failed'
 			);
@@ -161,39 +168,55 @@ abstract class ApiPushBase extends ApiBase {
 		return $token;
 	}
 
+	/**
+	 * @throws ApiUsageException
+	 */
 	public function execute() {
-		global $wgUser, $egPushLoginUser, $egPushLoginPass, $egPushLoginUsers,
-			$egPushLoginPasswords, $egPushLoginDomain, $egPushLoginDomains;
+		$pushConfig = new GlobalVarConfig( 'egPush' );
+		$pushLoginUser = $pushConfig->get( 'LoginUser' );
+		$pushLoginPass = $pushConfig->get( 'LoginPass' );
+		$pushLoginUsers = $pushConfig->get( 'LoginUsers' );
+		$pushLoginPasswords = $pushConfig->get( 'LoginPasswords' );
+		$pushLoginDomain = $pushConfig->get( 'LoginDomain' );
+		$pushLoginDomains = $pushConfig->get( 'LoginDomains' );
+		$pushTargets = $pushConfig->get( 'Targets' );
 
-		if ( !$wgUser->isAllowed( 'push' ) || $wgUser->isBlocked() ) {
-			$this->dieUsageMsg( [ 'badaccess-groups' ] );
+		$this->checkUserRightsAny( 'push' );
+		$block = $this->getUser()->getBlock();
+		if ( $block ) {
+			$this->dieBlocked( $block );
 		}
 
 		$params = $this->extractRequestParams();
 
-		PushFunctions::flipKeys( $egPushLoginUsers, 'users' );
-		PushFunctions::flipKeys( $egPushLoginPasswords, 'passwds' );
-		PushFunctions::flipKeys( $egPushLoginDomains, 'domains' );
+		PushFunctions::flipKeys( $pushLoginUsers, 'users' );
+		PushFunctions::flipKeys( $pushLoginPasswords, 'passwds' );
+		PushFunctions::flipKeys( $pushLoginDomains, 'domains' );
 
+		$targetsForProcessing = [];
 		foreach ( $params['targets'] as &$target ) {
+			if ( !in_array( $target, $pushTargets ) ) {
+				// We have to process defined targets only for security reasons
+				continue;
+			}
 			$user = false;
 			$pass = false;
 			$domain = false;
 
 			if (
-				array_key_exists( $target, $egPushLoginUsers )
-				&& array_key_exists( $target, $egPushLoginPasswords )
+				array_key_exists( $target, $pushLoginUsers )
+				&& array_key_exists( $target, $pushLoginPasswords )
 			) {
-				$user = $egPushLoginUsers[$target];
-				$pass = $egPushLoginPasswords[$target];
-			} elseif ( $egPushLoginUser !== '' && $egPushLoginPass !== '' ) {
-				$user = $egPushLoginUser;
-				$pass = $egPushLoginPass;
+				$user = $pushLoginUsers[$target];
+				$pass = $pushLoginPasswords[$target];
+			} elseif ( $pushLoginUser !== '' && $pushLoginPass !== '' ) {
+				$user = $pushLoginUser;
+				$pass = $pushLoginPass;
 			}
-			if ( array_key_exists( $target, $egPushLoginDomains ) ) {
-				$domain = $egPushLoginDomains[$target];
-			} elseif ( $egPushLoginDomain !== '' ) {
-				$domain = $egPushLoginDomain;
+			if ( array_key_exists( $target, $pushLoginDomains ) ) {
+				$domain = $pushLoginDomains[$target];
+			} elseif ( $pushLoginDomain !== '' ) {
+				$domain = $pushLoginDomain;
 			}
 
 			if ( substr( $target, -1 ) !== '/' ) {
@@ -205,10 +228,15 @@ abstract class ApiPushBase extends ApiBase {
 			if ( $user !== false ) {
 				$this->doLogin( $user, $pass, $domain, $target );
 			}
+
+			$targetsForProcessing[] = $target;
 		}
 
-		$this->doModuleExecute();
+		$this->doModuleExecute( $targetsForProcessing );
 	}
 
-	abstract protected function doModuleExecute();
+	/**
+	 * @param array $targetsForProcessing We have to process defined targets only for security reasons
+	 */
+	abstract protected function doModuleExecute( array $targetsForProcessing );
 }

@@ -151,12 +151,12 @@ class SpecialPush extends SpecialPage {
 		if ( count( $egPushTargets ) > 1 ) {
 			foreach ( $egPushTargets as $targetName => $targetUrl ) {
 				if ( $this->getRequest()->getCheck( str_replace( ' ', '_', $targetName ) ) ) {
-					$targets[$targetName] = $targetUrl;
+					$targets[] = $targetUrl;
 					$links[] = "[$targetUrl $targetName]";
 				}
 			}
 		} else {
-			$targets = $egPushTargets;
+			$targets = array_values( $egPushTargets );
 		}
 
 		$out = $this->getOutput();
