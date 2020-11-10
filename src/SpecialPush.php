@@ -360,6 +360,9 @@ class SpecialPush extends SpecialPage {
 		return $pages;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	protected function getGroupName() {
 		return 'pagetools';
 	}
