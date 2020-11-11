@@ -12,6 +12,9 @@
  */
 class ApiPush extends ApiPushBase {
 
+	/**
+	 * @var array
+	 */
 	protected $editResponses = [];
 
 	public function __construct( $main, $action ) {
