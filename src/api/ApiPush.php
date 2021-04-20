@@ -145,6 +145,8 @@ class ApiPush extends ApiPushBase {
 	protected function pushToTarget( Title $title, array $revision, $target, $token ) {
 		global $wgSitename;
 
+		$pushConfig = new GlobalVarConfig( 'egPush' );
+
 		$summary = wfMessage(
 			'push-import-revision-message',
 			$wgSitename
@@ -164,7 +166,9 @@ class ApiPush extends ApiPushBase {
 			[
 				'method' => 'POST',
 				'timeout' => 'default',
-				'postData' => $requestData
+				'postData' => $requestData,
+				'sslVerifyCert' => $pushConfig->get( 'VerifySSL' ),
+				'sslVerifyHost' => $pushConfig->get( 'VerifySSL' )
 			],
 		__METHOD__
 		);
