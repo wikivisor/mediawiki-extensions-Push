@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 /**
  * A special page that allows pushing one or more pages to one or more targets.
  * Partly based on MediaWiki's Special:Export.
@@ -297,8 +299,6 @@ class SpecialPush extends SpecialPage {
 	 * @return array
 	 */
 	protected function getPagesFromCategory( Title $title ) {
-		global $wgContLang;
-
 		$name = $title->getDBkey();
 
 		$dbr = wfGetDB( DB_REPLICA );
@@ -311,11 +311,12 @@ class SpecialPush extends SpecialPage {
 		);
 
 		$pages = [];
+		$contentLanguage = MediaWikiServices::getInstance()->getContentLanguage();
 
 		foreach ( $res as $row ) {
 			$n = $row->page_title;
 			if ( $row->page_namespace ) {
-				$ns = $wgContLang->getNsText( $row->page_namespace );
+				$ns = $contentLanguage->getNsText( $row->page_namespace );
 				$n = $ns . ':' . $n;
 			}
 
@@ -334,8 +335,6 @@ class SpecialPush extends SpecialPage {
 	 * @return array
 	 */
 	protected function getPagesFromNamespace( $nsindex ) {
-		global $wgContLang;
-
 		$dbr = wfGetDB( DB_REPLICA );
 		$res = $dbr->select(
 			'page',
@@ -346,12 +345,13 @@ class SpecialPush extends SpecialPage {
 		);
 
 		$pages = [];
+		$contentLanguage = MediaWikiServices::getInstance()->getContentLanguage();
 
 		foreach ( $res as $row ) {
 			$n = $row->page_title;
 
 			if ( $row->page_namespace ) {
-				$ns = $wgContLang->getNsText( $row->page_namespace );
+				$ns = $contentLanguage->getNsText( $row->page_namespace );
 				$n = $ns . ':' . $n;
 			}
 
