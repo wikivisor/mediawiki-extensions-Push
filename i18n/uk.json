@@ -3,6 +3,7 @@
 		"authors": [
 			"Andriykopanytsia",
 			"Base",
+			"DDPAT",
 			"Piramidion",
 			"Steve.rusyn",
 			"SteveR",
@@ -27,7 +28,7 @@
 	"group-filepusher": "Поширювачі файлів",
 	"group-filepusher-member": "{{GENDER:$1|файловий поширювач|файлова поширювачка}}",
 	"grouppage-filepusher": "{{ns:project}}:Файлові поширювачі",
-	"push-err-captacha": "Не може поширити до $1  через капчу.",
+	"push-err-captacha": "Не може поширити до $1 через капчу.",
 	"push-err-captcha-page": "Не може поширити сторінку $1 до всіх цілей через капчу.",
 	"push-err-authentication": "Автентифікація на $1 не вдалася. $2",
 	"push-tab-text": "Помістити",
