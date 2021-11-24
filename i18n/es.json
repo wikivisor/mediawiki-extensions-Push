@@ -5,7 +5,8 @@
 			"Fitoschido",
 			"Macofe",
 			"MarcoAurelio",
-			"Tiberius1701"
+			"Tiberius1701",
+			"Jakeukalane"
 		]
 	},
 	"push-desc": "Extensión ligera para transferir contenidos a otros wikis",
@@ -71,14 +72,14 @@
 	"push-special-item-completed": "$1: Transferencia completada",
 	"push-special-item-failed": "$1: Error en la transferencia: $2",
 	"push-special-push-done": "Transferencia completada",
-	"push-special-err-token-failed": "No se pudo obtener un \"token\" de edición en el wiki de destino.",
+	"push-special-err-token-failed": "No se pudo obtener un \"token\" de edición en la wiki de destino.",
 	"push-special-err-pageget-failed": "No se pudo obtener el contenido de la página local.",
-	"push-special-err-push-failed": "El wiki de destino rechazó la página transferida.",
+	"push-special-err-push-failed": "La wiki de destino rechazó la página transferida.",
 	"push-special-inc-files": "Incluir archivos incrustados",
 	"push-special-err-imginfo-failed": "No se pudo determinar si hay algún archivo que necesite ser transferido.",
 	"push-special-obtaining-fileinfo": "$1: Obteniendo información del archivo...",
 	"push-special-pushing-file": "$1: Transfiriendo archivo $2...",
 	"push-special-return": "Transferir más páginas",
-	"push-api-err-nocurl": "cURL no está instalado.\nEstablezca $egPushDirectFileUploads como falso en los wikis públicos, o instale cURL en los wikis privados",
+	"push-api-err-nocurl": "cURL no está instalado.\nEstablezca $egPushDirectFileUploads como falso en las wikis públicas o instale cURL en las wikis privadas",
 	"push-api-err-nofilesupport": "La instalación local de MediaWiki no admite publicar archivos.\nEn wikis públicos, establezca a «false» la opción $egPushDirectFileUploads.\nEn wikis privados, aplique el parche mencionado en la documentación de Push o actualice MediaWiki."
 }
