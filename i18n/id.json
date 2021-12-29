@@ -1,13 +1,28 @@
 {
 	"@metadata": {
 		"authors": [
-			"IvanLanin"
+			"IvanLanin",
+			"Daud I.F. Argana"
 		]
 	},
 	"push-desc": "Ekstensi ringan untuk mendorong konten ke wiki lainnya",
-	"right-push": "Otorisasi untuk menggunakan fungsi dorong.",
-	"right-bulkpush": "Otorisasi untuk menggunakan fungsi dorong massal (Special:Push).",
-	"right-pushadmin": "Otorisasi untuk memodifikasi target dan pengaturan dorong.",
+	"action-push": "mendorong halaman",
+	"right-push": "Menggunakan fungsi dorong.",
+	"action-bulkpush": "mendorong halaman secara massal",
+	"right-bulkpush": "Menggunakan fungsi dorong massal (Special:Push).",
+	"action-pushadmin": "mengonfigurasi pendorongan",
+	"right-pushadmin": "Memodifikasi target dan pengaturan dorong.",
+	"action-filepush": "mendorong berkas ke wiki lain",
+	"right-filepush": "Mendorong berkas ke wiki lain",
+	"group-pusher": "Pendorong",
+	"group-pusher-member": "{{GENDER:$1|pendorong}}",
+	"grouppage-pusher": "{{ns:project}}:Pendorong",
+	"group-bulkpusher": "Pendorong massal",
+	"group-bulkpusher-member": "{{GENDER:$1|pendorong massal}}",
+	"grouppage-bulkpusher": "{{ns:project}}:Pendorong massal",
+	"group-filepusher": "Pendorong berkas",
+	"group-filepusher-member": "{{GENDER:$1|pendorong berkas}}",
+	"grouppage-filepusher": "{{ns:project}}:Pendorong berkas",
 	"push-err-captacha": "Tidak dapat mendorong ke $1 karena captcha.",
 	"push-err-captcha-page": "Tidak dapat mendorong halaman $1 ke semua target karena captcha.",
 	"push-err-authentication": "Otentikasi pada $1 gagal. $2",
@@ -41,8 +56,8 @@
 	"push-tab-err-filepush": "Gagal mendorong berkas: $1",
 	"push-tab-embedded-files": "Berkas tersemat:",
 	"push-tab-no-embedded-files": "(Tidak ada berkas yang tersemat pada halaman ini.)",
-	"push-tab-files-override": "Berkas berikut telah ada: $1",
-	"push-tab-template-override": "Templat berikut telah ada: $1",
+	"push-tab-files-override": "{{PLURAL:$2|Berkas}} berikut sudah ada: $1",
+	"push-tab-template-override": "{{PLURAL:$2|Templat}} berikut sudah ada: $1",
 	"push-tab-err-uploaddisabled": "Pengunggahan tidak aktif. Pastikan $wgEnableUploads dan $wgAllowCopyUploads disetel sebagai true dalam LocalSettings.php wiki target.",
 	"special-push": "Dorong halaman",
 	"push-special-description": "Halaman ini memungkinkan Anda untuk mendorong satu atau lebih halaman ke satu atau lebih wiki MediaWiki.\n\nUntuk mendorong halaman, masukkan judul dalam kotak teks di bawah ini, satu judul per baris, dan tekan dorong semua. Proses ini dapat memakan waktu cukup lama.",
@@ -63,5 +78,15 @@
 	"push-special-pushing-file": "$1: Mendorong berkas $2...",
 	"push-special-return": "Dorong halaman lain",
 	"push-api-err-nocurl": "cURL tidak diinstal.\nSetel $egPushDirectFileUploads menjadi false pada wiki publik atau instal cURL untuk wiki pribadi",
-	"push-api-err-nofilesupport": "MediaWiki lokal tidak memiliki dukungan untuk mengirim berkas.\nPada wiki publik, setel $egPushDirectFileUploads menjadi false.\nPada wiki pribadi, terapkan tambalan linkd dari dokumentasi Push atau perbarui MediaWiki itu sendiri."
+	"push-api-err-nofilesupport": "MediaWiki lokal tidak memiliki dukungan untuk mengirim berkas.\nPada wiki publik, setel $egPushDirectFileUploads menjadi false.\nPada wiki pribadi, terapkan tambalan linkd dari dokumentasi Push atau perbarui MediaWiki itu sendiri.",
+	"apihelp-push-description": "Mendorong konten dari satu atau lebih halaman ke satu atau lebih wiki tujuan.",
+	"apihelp-push-summary": "Mendorong konten dari satu atau lebih halaman ke satu atau lebih wiki tujuan.",
+	"apihelp-push-param-page": "Nama halaman yang akan didorong.",
+	"apihelp-push-param-targets": "URL wiki yang dituju oleh dorongan.",
+	"apihelp-push-example": "Dorong halaman 'Main page' ke Wikipedia bahasa Inggris.",
+	"apihelp-pushimages-description": "Mendorong konten dari satu atau lebih halaman ke satu atau lebih wiki tujuan.",
+	"apihelp-pushimages-summary": "Mendorong konten dari satu atau lebih halaman ke satu atau lebih wiki tujuan.",
+	"apihelp-pushimages-param-images": "Nama gambar yang akan didorong.",
+	"apihelp-pushimages-param-targets": "URL wiki yang dituju oleh dorongan.",
+	"apihelp-pushimages-example": "Dorong berkas 'Foo.bar' ke Wikipedia bahasa Inggris."
 }
