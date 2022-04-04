@@ -2,13 +2,14 @@
 	"@metadata": {
 		"authors": [
 			"Armin1392",
+			"Beginneruser",
 			"Ebraminio"
 		]
 	},
 	"push-desc": "فرمت سبک وزن برای فشار محتوا به ویکی‌های دیگر",
-	"action-push": "صفحات فشار",
+	"action-push": "صفحه‌های فشار",
 	"right-push": "استفاده از قابلیت‌های فشار",
-	"action-bulkpush": "صفحات فشار عمده",
+	"action-bulkpush": "صفحه‌های فشار عمده",
 	"right-bulkpush": "استفاده از قابلیت‌های فشار عمده (یعنی ویژه: فشار)",
 	"action-pushadmin": "پیکربندی فشار",
 	"right-pushadmin": "تغییر اهداف فشار و تنظیمات فشار",
@@ -57,10 +58,10 @@
 	"push-tab-files-override": "{{PLURAL:$2|این پوشه در حال حاضر وجود دارد|این پوشه‌ها در حال حاضر وجود دارند}}: $1",
 	"push-tab-template-override": "{{PLURAL:$2|این الگو در حال حاضر وج.د دارد|این الگوها در حال حاضر وجود دارند}}: $1",
 	"push-tab-err-uploaddisabled": "انتقالات فعال نیستند. مطمئن شوید که  $wgEnableUploads و $wgAllowCopyUploads به درستی در LocalSettings.php ویکی هدف تنظیم هستند.",
-	"special-push": "صفحات فشار",
+	"special-push": "صفحه‌های فشار",
 	"push-special-description": "این صفحه شما را قادر به تحت فشار قرار دادن محتوای یک یا چند صفحه به یک یا چند ویکی مدیاویکی، می‌کند.\nبرای تحت فشار قرار دان صفحات، عناوین را در جعبه متن زیر وارد کنید، یک عنوان در هر خط وارد کنید و همه را تحت فشار قرار دهید. \nاین می تواند مدتی برای کامل شدن طول بکشد.",
 	"push-special-pushing-desc": "فشار دادن  $2 {{PLURAL:$2| صفحه|صفحات}} به $1 ...",
-	"push-special-button-text": "صفحات فشار",
+	"push-special-button-text": "صفحه‌های فشار",
 	"push-special-target-is": "هدف ویکی: $1",
 	"push-special-select-targets": "هدف ویکی‌ها:",
 	"push-special-item-pushing": "$1: فشار دادن",
