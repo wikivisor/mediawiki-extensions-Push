@@ -2,13 +2,14 @@
 	"@metadata": {
 		"authors": [
 			"Armin1392",
-			"Ebraminio"
+			"Ebraminio",
+			"Beginneruser"
 		]
 	},
 	"push-desc": "فرمت سبک وزن برای فشار محتوا به ویکی‌های دیگر",
-	"action-push": "صفحات فشار",
+	"action-push": "صفحه‌های فشار",
 	"right-push": "استفاده از قابلیت‌های فشار",
-	"action-bulkpush": "صفحات فشار عمده",
+	"action-bulkpush": "صفحه‌های فشار عمده",
 	"right-bulkpush": "استفاده از قابلیت‌های فشار عمده (یعنی ویژه: فشار)",
 	"action-pushadmin": "پیکربندی فشار",
 	"right-pushadmin": "تغییر اهداف فشار و تنظیمات فشار",
@@ -23,7 +24,7 @@
 	"grouppage-filepusher": "{{ns:project}}: فشاردهندگان پوشه",
 	"push-err-captacha": "نتوانست به علت سی‌ای‌پی‌تی‌سی‌اچ‌ای به $1  فشار دهد.",
 	"push-err-captcha-page": "نتوانست صفحه $1 را برای همهٔ اهداف به علت سی‌ای‌پی‌تی‌سی‌اچ‌ای فشار دهد.",
-	"push-err-authentication": "اعتبارنامه در $1 انجام نشد. $2",
+	"push-err-authentication": "تأیید اعتبار در $1 ناموفق بود. $2",
 	"push-tab-text": "فشار",
 	"push-button-text": "فشار",
 	"push-tab-desc": "این تب به شما برای تحت فشار فرار دادن نسخهٔ فعلی این صفحه به یک یا چند ویکی دیگر اجازه می‌دهد.",
@@ -37,7 +38,7 @@
 	"push-import-revision-message": "فشار از $1.",
 	"push-tab-no-targets": "هیچ اهدافی برای تحت فشار قرار دادن وجود ندارد. لطفاً برخی را به پوشهٔ LocalSettings.php اضافه کنید.",
 	"push-tab-push-to": "فشار به $1",
-	"push-remote-pages": "کنترل صفحات",
+	"push-remote-pages": "کنترل صفحه‌ها",
 	"push-remote-page-link": "$1 در $2",
 	"push-remote-page-link-full": "مشاهدهٔ $1 در $2",
 	"push-targets-total": "مجموع $1 {{PLURAL:$1|هدف|اهداف}} وجود دارند.",
@@ -57,10 +58,10 @@
 	"push-tab-files-override": "{{PLURAL:$2|این پوشه در حال حاضر وجود دارد|این پوشه‌ها در حال حاضر وجود دارند}}: $1",
 	"push-tab-template-override": "{{PLURAL:$2|این الگو در حال حاضر وج.د دارد|این الگوها در حال حاضر وجود دارند}}: $1",
 	"push-tab-err-uploaddisabled": "انتقالات فعال نیستند. مطمئن شوید که  $wgEnableUploads و $wgAllowCopyUploads به درستی در LocalSettings.php ویکی هدف تنظیم هستند.",
-	"special-push": "صفحات فشار",
+	"special-push": "صفحه‌های فشار",
 	"push-special-description": "این صفحه شما را قادر به تحت فشار قرار دادن محتوای یک یا چند صفحه به یک یا چند ویکی مدیاویکی، می‌کند.\nبرای تحت فشار قرار دان صفحات، عناوین را در جعبه متن زیر وارد کنید، یک عنوان در هر خط وارد کنید و همه را تحت فشار قرار دهید. \nاین می تواند مدتی برای کامل شدن طول بکشد.",
 	"push-special-pushing-desc": "فشار دادن  $2 {{PLURAL:$2| صفحه|صفحات}} به $1 ...",
-	"push-special-button-text": "صفحات فشار",
+	"push-special-button-text": "صفحه‌های فشار",
 	"push-special-target-is": "هدف ویکی: $1",
 	"push-special-select-targets": "هدف ویکی‌ها:",
 	"push-special-item-pushing": "$1: فشار دادن",
@@ -74,7 +75,7 @@
 	"push-special-err-imginfo-failed": "نتوانست تعیین کند اینکه اگر صفحه‌ای نیاز یه تحت فشار قرار گرفتن باشد را تعیین کند.",
 	"push-special-obtaining-fileinfo": "$1: در حال به دست آوردن اطلاعات پوشه...",
 	"push-special-pushing-file": "$1: فشار دادن پوشهٔ $2 ...",
-	"push-special-return": "فشار بیشتر صفحات",
+	"push-special-return": "فشار صفحه‌های بیشتر",
 	"push-api-err-nocurl": "یوآر‌ال نصب نشده‌است.\n$eg انتقالات پوشهٔ مستقیم تحت فشار غلط را در ویکی‌های عمومی تنظیم کنید، یا یوآر‌ال را برای ویکی‌های خصوصی نصب کنید",
 	"push-api-err-nofilesupport": "مدیاویکی داخلی برای پوشه‌های ارسالی پشتیبانی ندارد.\nدر ویکی‌های عمومی،انتقالات پوشه مستقیم تحت فشار غلط را به $egPushDirectFileUploads تنظیم کنید.\nدر ویکی‌های خصوصی، وصلهٔ پیوندشده را از مستندات تحت فشار یا به‌روزرسانی خود مدیاویکی درخواست کنید."
 }
