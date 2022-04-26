@@ -4,7 +4,8 @@
 			"Amire80",
 			"Guycn2",
 			"Inkbug",
-			"Yona b"
+			"Yona b",
+			"Ex-Diktator"
 		]
 	},
 	"push-desc": "הרחבה קלילה לדחיפת תוכן לאתרי ויקי אחרים",
@@ -14,6 +15,8 @@
 	"right-bulkpush": "שימוש בדחיקת דפים מרובים (באמצעות הדף \"Special:Push\")",
 	"action-pushadmin": "לשנות הגדרות דחיפה",
 	"right-pushadmin": "שינוי יעדים והגדרות של פונקציית הדחיפה",
+	"action-filepush": "לדחוף קבצים לאתרי ויקי אחרים",
+	"right-filepush": "דחיפת קבצים לאתרי ויקי אחרים",
 	"group-pusher": "דוחפים",
 	"group-pusher-member": "{{GENDER:$1|דוחף|דוחפת}}",
 	"grouppage-pusher": "{{ns:project}}:דוחפים",
