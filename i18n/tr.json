@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"BaRaN6161 TURK",
+			"Cobija",
 			"Joseph"
 		]
 	},
@@ -83,7 +84,7 @@
 	"apihelp-push-summary": "Bir veya daha fazla sayfanın içeriğini bir veya daha fazla hedef wikiye iletir.",
 	"apihelp-push-param-page": "Aktarılacak sayfanın adları.",
 	"apihelp-push-param-targets": "Wikilerin gönderilecek URL'leri.",
-	"apihelp-push-example": "'Ana sayfa' sayfasını İngilizce Vikipedi'ye aktarın.",
+	"apihelp-push-example": "'Anasayfa' sayfasını İngilizce Vikipedi'ye aktarın.",
 	"apihelp-pushimages-description": "Bir veya daha fazla sayfanın içeriğini bir veya daha fazla hedef wikiye iletir.",
 	"apihelp-pushimages-summary": "Bir veya daha fazla sayfanın içeriğini bir veya daha fazla hedef wikiye iletir.",
 	"apihelp-pushimages-param-images": "İçe aktarılacak görüntülerin isimleri.",
