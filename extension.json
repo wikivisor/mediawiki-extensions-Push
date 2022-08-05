@@ -202,6 +202,10 @@
 		"PushDirectFileUploads": {
 			"description": "This is needed when pushing to a wiki that cannot access the source file (for example from a private wiki to a wiki on the internet).",
 			"value": true
+		},
+		"PushVerifySSL": {
+			"description": "Controls SSL certificates verification when performing connections to remote servers",
+			"value": true
 		}
 	},
 	"manifest_version": 2

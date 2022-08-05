@@ -33,6 +33,8 @@ abstract class ApiPushBase extends ApiBase {
 	protected function doLogin(
 		$user, $password, $domain, $target, $token = null, $cookieJar = null, $attemtNr = 0
 	) {
+		$pushConfig = new GlobalVarConfig( 'egPush' );
+
 		$requestData = [
 			'action' => 'login',
 			'format' => 'json',
@@ -51,7 +53,9 @@ abstract class ApiPushBase extends ApiBase {
 			[
 				'postData' => $requestData,
 				'method' => 'POST',
-				'timeout' => 'default'
+				'timeout' => 'default',
+				'sslVerifyCert' => $pushConfig->get( 'VerifySSL' ),
+				'sslVerifyHost' => $pushConfig->get( 'VerifySSL' )
 			],
 			__METHOD__
 		);
@@ -65,6 +69,7 @@ abstract class ApiPushBase extends ApiBase {
 		$attemtNr++;
 
 		if ( !$status->isOK() ) {
+
 			$this->dieWithError(
 				wfMessage( 'push-err-authentication', $target, '' )->parse(),
 				'authentication-failed'
@@ -113,6 +118,8 @@ abstract class ApiPushBase extends ApiBase {
 	 *
 	 */
 	protected function getToken( string $target, string $type ) {
+		$pushConfig = new GlobalVarConfig( 'egPush' );
+
 		$requestData = [
 			'action' => 'query',
 			'format' => 'json',
@@ -123,7 +130,9 @@ abstract class ApiPushBase extends ApiBase {
 		$req = MWHttpRequest::factory( wfAppendQuery( $target, $requestData ),
 			[
 				'method' => 'GET',
-				'timeout' => 'default'
+				'timeout' => 'default',
+				'sslVerifyCert' => $pushConfig->get( 'VerifySSL' ),
+				'sslVerifyHost' => $pushConfig->get( 'VerifySSL' )
 			],
 			__METHOD__
 		);

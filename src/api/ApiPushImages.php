@@ -66,6 +66,7 @@ class ApiPushImages extends ApiPushBase {
 	protected function pushToTarget( Title $title, $target, $token ) {
 		global $egPushDirectFileUploads;
 
+		$pushConfig = new GlobalVarConfig( 'egPush' );
 		$imagePage = new ImagePage( $title );
 
 		$requestData = [
@@ -94,7 +95,9 @@ class ApiPushImages extends ApiPushBase {
 		$reqArgs = [
 			'method' => 'POST',
 			'timeout' => 'default',
-			'postData' => $requestData
+			'postData' => $requestData,
+			'sslVerifyCert' => $pushConfig->get( 'VerifySSL' ),
+			'sslVerifyHost' => $pushConfig->get( 'VerifySSL' )
 		];
 
 		if ( $egPushDirectFileUploads ) {
