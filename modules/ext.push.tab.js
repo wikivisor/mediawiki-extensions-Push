@@ -308,6 +308,13 @@
 				for ( var i in data ) {
 					if ( data.hasOwnProperty( i ) ) {
 						if ( data[i].error ) {
+
+							// Do not treat "fileexists-no-change" as a fatal error, just
+							// skip to next images silently
+							if ( data[i].error.code === 'fileexists-no-change' ) {
+								break;
+							}
+
 							data[i].error.info = mw.msg( 'push-tab-err-filepush', data[i].error.info );
 							handleError( sender, data[i].error );
 							fail = true;
