@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Fulup",
-			"Y-M D"
+			"Y-M D",
+			"Huñvreüs"
 		]
 	},
 	"action-push": "bountañ ar pajennoù",
@@ -37,8 +38,8 @@
 	"push-tab-err-filepush": "C'hwitet eo bet bountañ ar restr : $1",
 	"push-tab-embedded-files": "Restr enframmet :",
 	"push-tab-no-embedded-files": "(N'eus restr enframmet ebet er bajenn-mañ)",
-	"push-tab-files-override": "Bez ez eus eus ar restroù-mañ dija : $1",
-	"push-tab-template-override": "Bez ez eus eus ar patromoù-mañ dija : $1",
+	"push-tab-files-override": "Bez ez eus eus ar restr{{PLURAL:$2||où}}-mañ dija : $1",
+	"push-tab-template-override": "Bez ez eus eus ar patrom{{PLURAL:$2||où}}-mañ dija : $1",
 	"special-push": "Pajennoù da vountañ",
 	"push-special-pushing-desc": "O vountañ $2 {{PLURAL:$2|pajenn|pajenn}} da $1...",
 	"push-special-button-text": "Pajennoù da vountañ",
