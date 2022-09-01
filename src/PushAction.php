@@ -1,6 +1,7 @@
 <?php
 
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Permissions\PermissionManager;
 
 class PushAction extends Action {
 
@@ -9,10 +10,22 @@ class PushAction extends Action {
 	 */
 	private $pushConfig;
 
+	/**
+	 * @var PermissionManager
+	 */
+	private $permissionManager;
+
+	/**
+	 * @var RepoGroup
+	 */
+	private $repoGroup;
+
 	public function __construct( Article $article, IContextSource $context ) {
 		parent::__construct( $article, $context );
 		// TODO get rid of eg prefix
 		$this->pushConfig = new GlobalVarConfig( 'egPush' );
+		$this->permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
+		$this->repoGroup = MediaWikiServices::getInstance()->getRepoGroup();
 	}
 
 	/**
@@ -297,6 +310,16 @@ class PushAction extends Action {
 			}
 		}
 
+		// Include current page file if the page being pushed is within NS_FILE namespace
+		if ( $this->getTitle()->getNamespace() === NS_FILE ) {
+			$file = $this->repoGroup->findFile( $this->getTitle() );
+			if ( $file->isLocal() ) {
+				if ( !in_array( $this->getTitle()->getFullText(), $templateFiles ) ) {
+					$pageFiles[] = $this->getTitle()->getFullText();
+				}
+			}
+		}
+
 		$output = $this->getOutput();
 		$pushIncFiles = $this->pushConfig->get( 'IncFiles' );
 		$output->addJsConfigVars( [
@@ -378,7 +401,6 @@ class PushAction extends Action {
 	 * @return bool
 	 */
 	private function userHasRight( string $action ) {
-		$pm = MediaWikiServices::getInstance()->getPermissionManager();
-		return $pm->userHasRight( $this->getUser(), $action );
+		return $this->permissionManager->userHasRight( $this->getUser(), $action );
 	}
 }
