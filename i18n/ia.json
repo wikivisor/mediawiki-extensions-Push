@@ -11,6 +11,8 @@
 	"right-bulkpush": "Usar le functionalitate de transferimento in massa (i.e. Special:Push)",
 	"action-pushadmin": "configurar transferimento",
 	"right-pushadmin": "Modificar destinationes e configurationes de transferimento",
+	"action-filepush": "pulsar files verso altere wikis",
+	"right-filepush": "Pulsar files verso altere wikis",
 	"group-pusher": "Transferitores",
 	"group-pusher-member": "{{GENDER:$1||transferitor|transferitrice}}",
 	"grouppage-pusher": "{{ns:project}}:Transferitores",
@@ -75,5 +77,15 @@
 	"push-special-pushing-file": "$1: Transfere file $2...",
 	"push-special-return": "Transferer plus paginas",
 	"push-api-err-nocurl": "cURL non es installate.\nMitte $egPushDirectFileUploads a false in wikis public, o installa cURL pro wikis private",
-	"push-api-err-nofilesupport": "Le MediaWiki local non ha supporto pro le incargamento de files.\nIn wikis public, mitte $egPushDirectFileUploads a false.\nIn wikis private, applica le patch ligate ab le documentation de Push o actualisa MediaWiki mesme."
+	"push-api-err-nofilesupport": "Le MediaWiki local non ha supporto pro le incargamento de files.\nIn wikis public, mitte $egPushDirectFileUploads a false.\nIn wikis private, applica le patch ligate ab le documentation de Push o actualisa MediaWiki mesme.",
+	"apihelp-push-description": "Pulsa le contento de un o plure paginas verso un o plure wikis de destination.",
+	"apihelp-push-summary": "Pulsa le contento de un o plure paginas verso un o plure wikis de destination.",
+	"apihelp-push-param-page": "Le nomines del pagina a pulsar.",
+	"apihelp-push-param-targets": "Le URLs del wikis verso le quales pulsar.",
+	"apihelp-push-example": "Pulsar le pagina 'Main page' verso Wikipedia in anglese.",
+	"apihelp-pushimages-description": "Pulsa le contento de un o plure paginas verso un o plure wikis de destination.",
+	"apihelp-pushimages-summary": "Pulsa le contento de un o plure paginas verso un o plure wikis de destination.",
+	"apihelp-pushimages-param-images": "Le nomines del imagines a pulsar.",
+	"apihelp-pushimages-param-targets": "Le URLs del wikis verso le quales pulsar.",
+	"apihelp-pushimages-example": "Pulsar le file 'Foo.bar' verso Wikipedia in anglese."
 }
