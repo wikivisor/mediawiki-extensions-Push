@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Kghbln",
-			"Metalhead64"
+			"Metalhead64",
+			"McDutchie"
 		]
 	},
 	"push-desc": "Ermöglicht den einfachen Transfer von Inhalten eines Wikis in ein anderes",
@@ -82,7 +83,7 @@
 	"apihelp-push-description": "Transferiert den Inhalt einer oder mehrerer Seiten in ein oder mehrere Zielwikis.",
 	"apihelp-push-param-page": "Die Namen der zu transferierenden Seiten.",
 	"apihelp-push-param-targets": "Die URLs der Wikis, zu denen der Transfer stattfinden soll.",
-	"apihelp-push-example": "Transferiert die Seite „Hauptseite“ in die englischsprachige Wikipedia.",
+	"apihelp-push-example": "Transferiert die Seite „Main page“ in die englischsprachige Wikipedia.",
 	"apihelp-pushimages-description": "Transferiert den Inhalt einer oder mehrerer Seiten in ein oder mehrere Zielwikis.",
 	"apihelp-pushimages-param-images": "Die Namen der zu transferierenden Bilder.",
 	"apihelp-pushimages-param-targets": "Die URLs der Wikis, zu denen der Transfer stattfinden soll.",
