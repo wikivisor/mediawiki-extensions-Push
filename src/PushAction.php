@@ -9,8 +9,8 @@ class PushAction extends Action {
 	 */
 	private $pushConfig;
 
-	public function __construct( Page $page, IContextSource $context = null ) {
-		parent::__construct( $page, $context );
+	public function __construct( Article $article, IContextSource $context ) {
+		parent::__construct( $article, $context );
 		// TODO get rid of eg prefix
 		$this->pushConfig = new GlobalVarConfig( 'egPush' );
 	}
