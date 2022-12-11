@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 abstract class ApiPushBase extends ApiBase {
 	/**
 	 * Associative array containing CookieJar objects (values) to be passed in
@@ -49,7 +51,7 @@ abstract class ApiPushBase extends ApiBase {
 			$requestData['lgtoken'] = $token;
 		}
 
-		$req = MWHttpRequest::factory( $target,
+		$req = MediaWikiServices::getInstance()->getHttpRequestFactory()->create( $target,
 			[
 				'postData' => $requestData,
 				'method' => 'POST',
@@ -127,7 +129,8 @@ abstract class ApiPushBase extends ApiBase {
 			'type' => $type,
 		];
 
-		$req = MWHttpRequest::factory( wfAppendQuery( $target, $requestData ),
+		$req = MediaWikiServices::getInstance()->getHttpRequestFactory()->create(
+			wfAppendQuery( $target, $requestData ),
 			[
 				'method' => 'GET',
 				'timeout' => 'default',

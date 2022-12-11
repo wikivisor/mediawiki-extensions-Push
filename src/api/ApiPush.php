@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 /**
  * API module to push wiki pages to other MediaWiki wikis.
  *
@@ -162,7 +164,7 @@ class ApiPush extends ApiPushBase {
 			'token' => $token,
 		];
 
-		$req = MWHttpRequest::factory( $target,
+		$req = MediaWikiServices::getInstance()->getHttpRequestFactory()->create( $target,
 			[
 				'method' => 'POST',
 				'timeout' => 'default',
