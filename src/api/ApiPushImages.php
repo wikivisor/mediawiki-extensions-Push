@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 /**
  * API module to push images to other MediaWiki wikis.
  *
@@ -115,13 +117,12 @@ class ApiPushImages extends ApiPushBase {
 					'image-push-nofilesupport'
 				);
 			} else {
-				$httpEngine = Http::$httpEngine;
-				Http::$httpEngine = 'curl';
-				$req = MWHttpRequest::factory( $target, $reqArgs, __METHOD__ );
-				Http::$httpEngine = $httpEngine;
+				$req = MediaWikiServices::getInstance()->getHttpRequestFactory()
+					->create( $target, $reqArgs, __METHOD__ );
 			}
 		} else {
-			$req = MWHttpRequest::factory( $target, $reqArgs, __METHOD__ );
+			$req = MediaWikiServices::getInstance()->getHttpRequestFactory()
+				->create( $target, $reqArgs, __METHOD__ );
 		}
 
 		if ( array_key_exists( $target, $this->cookieJars ) ) {
