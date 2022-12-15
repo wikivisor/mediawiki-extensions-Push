@@ -6,7 +6,8 @@
 			"Liuxinyu970226",
 			"Mark85296341",
 			"Sanmosa",
-			"Xiplus"
+			"Xiplus",
+			"捍粵者"
 		]
 	},
 	"push-desc": "推送內容到其它 wiki 的小巧擴充",
@@ -83,7 +84,7 @@
 	"push-special-return": "推送更多頁面",
 	"push-api-err-nocurl": "未安裝 cURL。\n請在公共 wiki 上設定 $egPushDirectFileUploads 為 false，或在私有 wiki 上安裝 cURL",
 	"push-api-err-nofilesupport": "本地 MediaWiki 不支援推送檔案。\n在公開 wiki 裡，請設定 $egPushDirectFileUploads 為 false。\n在私有 wiki 裡，請套用連結自推送文件的修補內容或更新 MediaWiki 本身。",
-	"apihelp-push-description": "推送一個或多個頁面內容到一個或多個目標 wiki。",
+	"apihelp-push-description": "推送一頁或以上頁面內容到一部或以上wiki",
 	"apihelp-push-summary": "推送一個或多個頁面內容到一個或多個目標 wiki。",
 	"apihelp-push-param-page": "要推送的頁面名稱。",
 	"apihelp-push-param-targets": "要推送到的 wiki URL。",
