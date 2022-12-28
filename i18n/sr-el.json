@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": []
+	},
+	"push-desc": "Lagana ekstenzija za postavljanje sadržaja na ostale vikije.",
+	"action-push": "postavljate stranice",
+	"right-push": "Korišćenje funkcionalnosti postavljanja",
+	"push-tab-desc": "Ova kartica vam dozvoljava da postavite trenutnu izmenu ove stranice na jednu ili više drugih vikija.",
+	"push-tab-embedded-files": "Ugrađene datoteke:",
+	"push-tab-no-embedded-files": "(Na ovoj stranici nisu ugrađene datoteke.)",
+	"push-special-target-is": "Odredišni viki: $1",
+	"push-special-select-targets": "Odredišni vikiji:"
+}
