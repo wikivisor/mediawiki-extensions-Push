@@ -4,6 +4,9 @@
 			"Eleassar"
 		]
 	},
+	"push-desc": "Lahka razširitev za izvoz vsebine v druge vikije",
+	"action-filepush": "izvoz datotek v druge vikije",
+	"right-filepush": "Izvoz datotek v druge vikije",
 	"push-button-failed": "Potisk ni uspel",
 	"push-remote-page-link": "$1 v vikiju $2"
 }
