@@ -9,5 +9,6 @@
 	"right-filepush": "Izvoz datotek v druge vikije",
 	"push-button-failed": "Potisk ni uspel",
 	"push-remote-page-link": "$1 v vikiju $2",
+	"apihelp-push-param-page": "Imena strani za prenos.",
 	"apihelp-push-example": "Prenesi stran »Main page« v angleško vikipedijo."
 }
