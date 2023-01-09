@@ -64,7 +64,7 @@
 	"push-tab-err-uploaddisabled": "העלאות אינן מופעלות. יש לוודא כי ערך המשתנים ‎$wgEnableUploads ו־‎$wgEnableUploads הוא true בוויקי היעד.",
 	"special-push": "דחיפת דפים",
 	"push-special-description": "הדף הזה מאפשר לכם לדחוף דף אחד או יותר לאתר ויקי אחד או יותר שמשתמש במדיה־ויקי.\n\nכדי לדחוף דפים, הכניסו את כותרות הדפים לתיבת הטקסט להלן, כותרת אחת בכל שורה, ולחצו על הכפתור \"לדחוף הכול\". ביצוע הפעולה יכול לקחת זמן.",
-	"push-special-pushing-desc": "דחיפה של {{PLURAL:$2|עמוד אחד|$2 עמודים}} ל{{GRAMMAR:תחילית|$1}}...",
+	"push-special-pushing-desc": "דחיפה של {{PLURAL:$2|דף אחד|$2 דפים}} ל{{GRAMMAR:תחילית|$1}}...",
 	"push-special-button-text": "לדחוף דפים",
 	"push-special-target-is": "אתר הוויקי המיועד: $1",
 	"push-special-select-targets": "אתרי הוויקי המיועדים:",
