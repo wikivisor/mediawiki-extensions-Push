@@ -5,11 +5,17 @@
 		]
 	},
 	"push-desc": "Lahka razširitev za izvoz vsebine v druge vikije",
+	"action-push": "strani za potisk",
+	"action-bulkpush": "masovno potiskanje strani",
 	"action-filepush": "izvoz datotek v druge vikije",
 	"right-filepush": "Izvoz datotek v druge vikije",
 	"push-button-failed": "Potisk ni uspel",
+	"push-remote-pages": "Oddaljene strani",
 	"push-remote-page-link": "$1 v vikiju $2",
 	"push-tab-inc-templates": "Vključi predloge",
+	"special-push": "Potisk strani",
+	"push-special-button-text": "Potisni strani",
+	"push-special-return": "Potisni več strani",
 	"apihelp-push-param-page": "Imena strani za prenos.",
 	"apihelp-push-example": "Prenesi stran »Main page« v angleško vikipedijo."
 }
