@@ -120,11 +120,6 @@ $specialPageAliases['vi'] = [
 	'Push' => [ 'Đẩy' ],
 ];
 
-/** Chinese (中文) */
-$specialPageAliases['zh'] = [
-	'Push' => [ '推送', '推播' ],
-];
-
 /** Simplified Chinese (中文（简体）‎) */
 $specialPageAliases['zh-hans'] = [
 	'Push' => [ '推送' ],
