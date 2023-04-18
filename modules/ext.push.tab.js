@@ -1,11 +1,11 @@
 /**
  * JavaScript for the Push tab in the Push extension.
- * @see https://www.mediawiki.org/wiki/Extension:Push
  *
+ * @see https://www.mediawiki.org/wiki/Extension:Push
  * @author Jeroen De Dauw <jeroendedauw at gmail dot com>
  */
 
-( function( mw, $ ) { $( document ).ready( function() {
+$( function () {
 
 	var pages,
 		targetData = [],
@@ -15,19 +15,19 @@
 		$txtFileList = $( '#txtFileList' ),
 		$checkIncFiles = $( '#checkIncFiles' );
 
-	$.each( $pushButton, function( i, v ) {
-		getRemoteArticleInfo( $( v ).attr( 'targetid' ), $( v ).attr( 'pushtarget' ) );
+	$pushButton.each( function () {
+		getRemoteArticleInfo( $( this ).attr( 'targetid' ), $( this ).attr( 'pushtarget' ) );
 	} );
 
-	$pushButton.click( function() {
+	$pushButton.on( 'click', function () {
 		this.disabled = true;
 
-		var errorDiv = $( '#targeterrors' + $( this ).attr( 'targetid' ) );
-		errorDiv.fadeOut( 'fast' );
+		var $errorDiv = $( '#targeterrors' + $( this ).attr( 'targetid' ) );
+		$errorDiv.fadeOut( 'fast' );
 
-		if ( $('#checkIncTemplates').prop('checked') ) {
+		if ( $( '#checkIncTemplates' ).prop( 'checked' ) ) {
 			pages = mw.config.get( 'wgPushTemplates' );
-			pages.unshift( $('#pageName').attr('value') );
+			pages.unshift( $( '#pageName' ).attr( 'value' ) );
 		} else {
 			pages = [ $( '#pageName' ).attr( 'value' ) ];
 		}
@@ -40,16 +40,14 @@
 		);
 	} );
 
-	$pushAllButton.click( function() {
+	$pushAllButton.on( 'click', function () {
 		this.disabled = true;
 		this.textContent = mw.msg( 'push-button-pushing' );
-		$.each( $pushButton, function( i, v ) {
-			$( v ).click();
-		} );
+		$pushButton.tigger( 'click' );
 	} );
 
 	$( '#divIncTemplates' ).hover(
-		function() {
+		function () {
 			var isHidden = $txtTemplateList.css( 'opacity' ) === 0;
 
 			if ( isHidden ) {
@@ -57,22 +55,22 @@
 			}
 
 			$txtTemplateList.fadeTo(
-				isHidden? 'slow' : 'fast',
+				isHidden ? 'slow' : 'fast',
 				1
 			);
 		},
-		function() {
-			$txtTemplateList.fadeTo( 'fast', 0.5 )
+		function () {
+			$txtTemplateList.fadeTo( 'fast', 0.5 );
 		}
-	).click( function() {
+	).on( 'click', function () {
 		setIncludeFilesText();
 		displayTargetsConflictStatus();
 	} );
 
-	$( '#divIncFiles' ).click( function() {
+	$( '#divIncFiles' ).on( 'click', function () {
 		displayTargetsConflictStatus();
 	} ).hover(
-		function() {
+		function () {
 			var isHidden = $txtFileList.css( 'opacity' ) === 0;
 
 			if ( isHidden ) {
@@ -85,8 +83,8 @@
 				1
 			);
 		},
-		function() {
-			$txtFileList.fadeTo( 'fast', 0.5 )
+		function () {
+			$txtFileList.fadeTo( 'fast', 0.5 );
 		}
 	);
 
@@ -94,7 +92,7 @@
 		if ( $checkIncFiles.length !== 0 ) {
 			var files = mw.config.get( 'wgPushPageFiles' );
 
-			if ( $('#checkIncTemplates').prop('checked') ) {
+			if ( $( '#checkIncTemplates' ).prop( 'checked' ) ) {
 				files = files.concat( mw.config.get( 'wgPushTemplateFiles' ) );
 			}
 
@@ -102,14 +100,14 @@
 				$txtFileList.text( '(' + mw.msg( 'push-tab-embedded-files' ) + ' ' );
 
 				for ( var i in files ) {
-					if ( files.hasOwnProperty( i ) ) {
+					if ( Object.prototype.hasOwnProperty.call( files, i ) ) {
 						if ( i > 0 ) {
 							$txtFileList.append( ', ' );
 						}
 						$txtFileList.append(
 							$( '<a>' )
-								.attr( 'href', mw.config.get( 'wgPushIndexPath' ) + '?title=' + files[i] )
-								.text( files[i] )
+								.attr( 'href', mw.config.get( 'wgPushIndexPath' ) + '?title=' + files[ i ] )
+								.text( files[ i ] )
 						);
 					}
 				}
@@ -122,62 +120,62 @@
 	}
 
 	function getRemoteArticleInfo( targetId, targetUrl ) {
-		var pageName = $( '#pageName' ).attr('value');
+		var pageName = $( '#pageName' ).attr( 'value' );
 
 		$.getJSON(
 			targetUrl + '/api.php?callback=?',
 			{
-				'action': 'query',
-				'format': 'json',
-				'prop': 'revisions',
-				'rvprop': 'timestamp|user|comment',
-				'titles': [pageName]
+				action: 'query',
+				format: 'json',
+				prop: 'revisions',
+				rvprop: 'timestamp|user|comment',
+				titles: [ pageName ]
 					.concat( mw.config.get( 'wgPushTemplates' ) )
 					.concat( mw.config.get( 'wgPushPageFiles' ) )
 					.concat( mw.config.get( 'wgPushTemplateFiles' ) )
 					.join( '|' )
 			},
-			function( data ) {
+			function ( data ) {
 				if ( data.query ) {
-					var infoDiv = $( '#targetinfo' + targetId );
+					var $infoDiv = $( '#targetinfo' + targetId );
 
 					var existingPages = [];
 					var remotePage = false;
 					var message;
 
 					for ( var remotePageId in data.query.pages ) {
-						if ( data.query.pages.hasOwnProperty( remotePageId ) ) {
+						if ( Object.prototype.hasOwnProperty.call( data.query.pages, remotePageId ) ) {
 							if ( remotePageId > 0 ) {
-								if ( data.query.pages[remotePageId].title === pageName ) {
-									remotePage = data.query.pages[remotePageId];
+								if ( data.query.pages[ remotePageId ].title === pageName ) {
+									remotePage = data.query.pages[ remotePageId ];
 								} else {
-									existingPages.push( data.query.pages[remotePageId] );
+									existingPages.push( data.query.pages[ remotePageId ] );
 								}
 							}
 						}
 					}
 
-					targetData[targetId] = { 'existingPages': existingPages };
+					targetData[ targetId ] = { existingPages: existingPages };
 
 					if ( remotePage ) {
-						$( '#targetlink' + targetId ).attr( { 'class': '' } );
+						$( '#targetlink' + targetId ).attr( 'class', '' );
 
-						var revision = remotePage.revisions[0];
+						var revision = remotePage.revisions[ 0 ];
 						var dateTime = revision.timestamp.split( 'T' );
 
 						message = mw.msg(
 							'push-tab-last-edit',
 							revision.user,
-							dateTime[0],
-							dateTime[1].replace( 'Z', '' )
+							dateTime[ 0 ],
+							dateTime[ 1 ].replace( 'Z', '' )
 						);
 					} else {
-						$( '#targetlink' + targetId ).attr( { 'class': 'new' } );
+						$( '#targetlink' + targetId ).attr( 'class', 'new' );
 						message = mw.msg( 'push-tab-not-created' );
 					}
 
-					infoDiv.text( message );
-					infoDiv.fadeIn( 'slow' );
+					$infoDiv.text( message );
+					$infoDiv.fadeIn( 'slow' );
 
 					displayTargetConflictStatus( targetId );
 				}
@@ -186,25 +184,27 @@
 	}
 
 	function displayTargetsConflictStatus() {
-		$.each( $( ".push-button" ), function( i, v ) {
-			displayTargetConflictStatus( $( v ).attr( 'targetid' ) );
+		$( '.push-button' ).each( function () {
+			displayTargetConflictStatus( $( this ).attr( 'targetid' ) );
 		} );
 	}
 
 	function displayTargetConflictStatus( targetId ) {
-		if ( !targetData[targetId] ) {
+		var remotePageId;
+
+		if ( !targetData[ targetId ] ) {
 			// It's possible the request to retrieve this data failed, so don't do anything when this is the case.
 			return;
 		}
 
-		if ( $('#checkIncTemplates').prop('checked') ) {
+		if ( $( '#checkIncTemplates' ).prop( 'checked' ) ) {
 			var overrideTemplates = [];
 
-			for ( var remotePageId in targetData[targetId].existingPages ) {
-				if ( targetData[targetId].existingPages.hasOwnProperty( remotePageId ) ) {
-					if ( targetData[targetId].existingPages[remotePageId].ns === 10 ) {
+			for ( remotePageId in targetData[ targetId ].existingPages ) {
+				if ( Object.prototype.hasOwnProperty.call( targetData[ targetId ].existingPages, remotePageId ) ) {
+					if ( targetData[ targetId ].existingPages[ remotePageId ].ns === 10 ) {
 						// Add the template, but get rid of the namespace prefix first.
-						overrideTemplates.push( targetData[targetId].existingPages[remotePageId].title.split( ':', 2 )[1] );
+						overrideTemplates.push( targetData[ targetId ].existingPages[ remotePageId ].title.split( ':', 2 )[ 1 ] );
 					}
 				}
 			}
@@ -226,11 +226,11 @@
 		if ( $checkIncFiles.length !== 0 && $checkIncFiles.prop( 'checked' ) ) {
 			var overideFiles = [];
 
-			for ( remotePageId in targetData[targetId].existingPages ) {
-				if ( targetData[targetId].existingPages.hasOwnProperty( remotePageId ) ) {
-					if ( targetData[targetId].existingPages[remotePageId].ns === 6 ) {
+			for ( remotePageId in targetData[ targetId ].existingPages ) {
+				if ( Object.prototype.hasOwnProperty.call( targetData[ targetId ].existingPages, remotePageId ) ) {
+					if ( targetData[ targetId ].existingPages[ remotePageId ].ns === 6 ) {
 						// Add the file, but get rid of the namespace prefix first.
-						overideFiles.push( targetData[targetId].existingPages[remotePageId].title.split( ':', 2 )[1] );
+						overideFiles.push( targetData[ targetId ].existingPages[ remotePageId ].title.split( ':', 2 )[ 1 ] );
 					}
 				}
 			}
@@ -260,9 +260,9 @@
 		} ).done( function ( data ) {
 			if ( data.error ) {
 				handleError( sender, data.error );
-			} else if ( data[0] && data[0].error ) {
-				handleError( sender, data[0].error );
-			} else if ( data[0] && data[0].edit && data[0].edit.captcha ) {
+			} else if ( data[ 0 ] && data[ 0 ].error ) {
+				handleError( sender, data[ 0 ].error );
+			} else if ( data[ 0 ] && data[ 0 ].edit && data[ 0 ].edit.captcha ) {
 				handleError( sender, { info: mw.msg( 'push-err-captacha', targetName ) } );
 			} else {
 				handlePushingCompletion( sender );
@@ -275,7 +275,7 @@
 	function handlePushingCompletion( sender ) {
 		sender.textContent = mw.msg( 'push-button-completed' );
 
-		setTimeout( function() {
+		setTimeout( function () {
 			reEnableButton( sender );
 		}, 1000 );
 	}
@@ -306,22 +306,22 @@
 				fail = true;
 			} else {
 				for ( var i in data ) {
-					if ( data.hasOwnProperty( i ) ) {
-						if ( data[i].error ) {
+					if ( Object.prototype.hasOwnProperty.call( data, i ) ) {
+						if ( data[ i ].error ) {
 
 							// Do not treat "fileexists-no-change" as a fatal error, just
 							// skip to next images silently
-							if ( data[i].error.code === 'fileexists-no-change' ) {
+							if ( data[ i ].error.code === 'fileexists-no-change' ) {
 								break;
 							}
 
-							data[i].error.info = mw.msg( 'push-tab-err-filepush', data[i].error.info );
-							handleError( sender, data[i].error );
+							data[ i ].error.info = mw.msg( 'push-tab-err-filepush', data[ i ].error.info );
+							handleError( sender, data[ i ].error );
 							fail = true;
 							break;
-						} else if ( !data[i].upload ) {
-							data[i].error.info = mw.msg( 'push-tab-err-filepush-unknown' );
-							handleError( sender, data[i].error );
+						} else if ( !data[ i ].upload ) {
+							data[ i ].error.info = mw.msg( 'push-tab-err-filepush-unknown' );
+							handleError( sender, data[ i ].error );
 							fail = true;
 							break;
 						}
@@ -351,34 +351,36 @@
 
 		// If there is a "push all" button, make sure to reset it
 		// when all other buttons have been reset.
-		if ( typeof $pushAllButton !== "undefined" ) {
+		if ( typeof $pushAllButton !== 'undefined' ) {
 			var hasDisabled = false;
 
-			$.each( $pushButton, function( i, v ) {
-				if ( v.disabled ) {
+			$pushButton.each( function () {
+				if ( this.disabled ) {
 					hasDisabled = true;
 				}
 			} );
 
 			if ( !hasDisabled ) {
-				$pushAllButton.attr( "disabled", false );
+				$pushAllButton.attr( 'disabled', false );
 				$pushAllButton.text( mw.msg( 'push-button-all' ) );
 			}
 		}
 	}
 
 	function handleError( sender, error ) {
-		var errorDiv = $( '#targeterrors' + $( sender ).attr( 'targetid' ) );
+		var $errorDiv = $( '#targeterrors' + $( sender ).attr( 'targetid' ) );
 
 		if ( error.code && error.code === 'uploaddisabled' ) {
 			error.info = mw.msg( 'push-tab-err-uploaddisabled' );
 		}
 
-		errorDiv.text( error.info );
-		errorDiv.fadeIn( 'slow' );
+		$errorDiv.text( error.info );
+		$errorDiv.fadeIn( 'slow' );
 
 		sender.textContent = mw.msg( 'push-button-failed' );
-		setTimeout( function() { reEnableButton( sender ); }, 2500 );
+		setTimeout( function () {
+			reEnableButton( sender );
+		}, 2500 );
 	}
 
-} ); } )( mediaWiki, jQuery );
+} );
