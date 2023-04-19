@@ -27,7 +27,7 @@
 	"push-err-authentication": "Autentisering ved $1 feilet. $2",
 	"push-tab-text": "Dytt",
 	"push-button-text": "Dytt",
-	"push-tab-desc": "Dette fanen lar deg dytte den nåværende revisjonen av denne siden til én eller flere wikier.",
+	"push-tab-desc": "Dette fanen lar deg dytte den nåværende versjonen av denne siden til én eller flere wikier.",
 	"push-button-pushing": "Dytter",
 	"push-button-pushing-files": "Dytter filer",
 	"push-button-completed": "Dytting fullført",
