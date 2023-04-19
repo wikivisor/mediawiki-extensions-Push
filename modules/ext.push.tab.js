@@ -42,7 +42,7 @@
 
 	$pushAllButton.click( function() {
 		this.disabled = true;
-		this.innerHTML = mw.msg( 'push-button-pushing' );
+		this.textContent = mw.msg( 'push-button-pushing' );
 		$.each( $pushButton, function( i, v ) {
 			$( v ).click();
 		} );
@@ -251,7 +251,7 @@
 	}
 
 	function initiatePush( sender, pages, targetUrl, targetName ) {
-		sender.innerHTML = mw.msg( 'push-button-pushing' );
+		sender.textContent = mw.msg( 'push-button-pushing' );
 
 		new mw.Api().postWithEditToken( {
 			action: 'push',
@@ -273,7 +273,7 @@
 	}
 
 	function handlePushingCompletion( sender ) {
-		sender.innerHTML = mw.msg( 'push-button-completed' );
+		sender.textContent = mw.msg( 'push-button-completed' );
 
 		setTimeout( function() {
 			reEnableButton( sender );
@@ -285,7 +285,7 @@
 
 		if ( images.length > 0 && $checkIncFiles.length !== 0 && $checkIncFiles.prop( 'checked' ) ) {
 			var currentFile = images.pop();
-			button.innerHTML = mw.msg( 'push-button-pushing-files' );
+			button.textContent = mw.msg( 'push-button-pushing-files' );
 			initiateImagePush( button, pages, targetUrl, targetName, images, currentFile );
 		} else {
 			initiatePush( button, pages, targetUrl, targetName );
@@ -344,7 +344,7 @@
 	}
 
 	function reEnableButton( button ) {
-		button.innerHTML = mw.msg( 'push-button-text' );
+		button.textContent = mw.msg( 'push-button-text' );
 		button.disabled = false;
 
 		getRemoteArticleInfo( $( button ).attr( 'targetid' ), $( button ).attr( 'pushtarget' ) );
@@ -377,7 +377,7 @@
 		errorDiv.text( error.info );
 		errorDiv.fadeIn( 'slow' );
 
-		sender.innerHTML = mw.msg( 'push-button-failed' );
+		sender.textContent = mw.msg( 'push-button-failed' );
 		setTimeout( function() { reEnableButton( sender ); }, 2500 );
 	}
 
