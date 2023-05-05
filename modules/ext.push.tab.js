@@ -46,7 +46,7 @@ $( function () {
 		$pushButton.tigger( 'click' );
 	} );
 
-	$( '#divIncTemplates' ).hover(
+	$( '#divIncTemplates' ).on( 'hover',
 		function () {
 			var isHidden = $txtTemplateList.css( 'opacity' ) === 0;
 
@@ -69,7 +69,7 @@ $( function () {
 
 	$( '#divIncFiles' ).on( 'click', function () {
 		displayTargetsConflictStatus();
-	} ).hover(
+	} ).on( 'hover',
 		function () {
 			var isHidden = $txtFileList.css( 'opacity' ) === 0;
 
