@@ -119,13 +119,14 @@ class ApiPush extends ApiPushBase {
 	 * @param array $targets
 	 */
 	protected function doPush( Title $title, array $revision, array $targets ) {
+		$hookContainer = MediaWikiServices::getInstance()->getHookContainer();
 		foreach ( $targets as $target ) {
 			$token = $this->getToken( $target, 'csrf' );
 
 			if ( $token !== false ) {
 				$doPush = true;
 
-				Hooks::run( 'PushAPIBeforePush', [ &$title, &$revision, &$target, &$token, &$doPush ] );
+				$hookContainer->run( 'PushAPIBeforePush', [ &$title, &$revision, &$target, &$token, &$doPush ] );
 
 				if ( $doPush ) {
 					$this->pushToTarget( $title, $revision, $target, $token );
@@ -184,7 +185,8 @@ class ApiPush extends ApiPushBase {
 		if ( $status->isOK() ) {
 			$response = $req->getContent();
 			$this->editResponses[] = $response;
-			Hooks::run( 'PushAPIAfterPush', [ $title, $revision, $target, $token, $response ] );
+			MediaWikiServices::getInstance()->getHookContainer()
+				->run( 'PushAPIAfterPush', [ $title, $revision, $target, $token, $response ] );
 		} else {
 			$this->dieWithError( wfMessage( 'push-special-err-push-failed' )->text(), 'page-push-failed' );
 		}
