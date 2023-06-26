@@ -20,10 +20,8 @@
 	"push-special-button-text": "Potisni strani",
 	"push-special-item-failed": "$1: Potisk je spodletel: $2",
 	"push-special-return": "Potisni več strani",
-	"apihelp-push-description": "Vsebino ene ali več strani potisne v enega ali več ciljnih vikijev.",
 	"apihelp-push-summary": "Vsebino ene ali več strani potisne v enega ali več ciljnih vikijev.",
 	"apihelp-push-param-page": "Imena strani za prenos.",
 	"apihelp-push-example": "Prenesi stran »Main page« v angleško vikipedijo.",
-	"apihelp-pushimages-description": "Vsebino ene ali več strani potisne v enega ali več ciljnih vikijev.",
 	"apihelp-pushimages-summary": "Vsebino ene ali več strani potisne v enega ali več ciljnih vikijev."
 }
