@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Winston Sung"
+		]
+	},
+	"push-desc": "Lagana ekstenzija za prijenos sadržaja sa jednog na ostale vikije",
+	"action-push": "prijenos stranica",
+	"right-push": "Korištenje funkcionalnosti prijenosa"
+}
