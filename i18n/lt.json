@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": [
+			"Nokeoo"
+		]
+	},
+	"push-special-target-is": "Tikslo viki: $1",
+	"push-special-select-targets": "Tikslo viki:",
+	"push-special-err-token-failed": "Nepavyko gauti redagavimo prieigos rakto tiksliniame viki.",
+	"push-special-err-pageget-failed": "Nepavyko gauti vietinio puslapio turinio.",
+	"push-special-inc-files": "Įtraukti įterptus failus",
+	"push-special-obtaining-fileinfo": "$1: Gaunama failo informacija..."
+}
