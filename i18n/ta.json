@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Fahimrazick",
 			"Shanmugamp7"
 		]
 	},
@@ -37,7 +38,7 @@
 	"push-targets-total": "மொத்தமாக $1 {{PLURAL:$1|இலக்கு உள்ளது|இலக்குகள் உள்ளன}}.",
 	"push-button-all": "அனைத்தையும் தள்ளு",
 	"push-tab-not-created": "இந்தப் பக்கம் இல்லை.",
-	"push-tab-push-options": "தள்ளல் விருப்பத்தேர்வுகள்:",
+	"push-tab-push-options": "தள்ளல் தெரிவுகள்:",
 	"push-tab-inc-templates": "வார்ப்புருக்களையும் உள்ளடக்கு",
 	"push-tab-used-templates": "({{PLURAL:$2|வார்ப்புரு|வார்ப்புருக்கள்}}: $1 பயன்படுத்தப்பட்டது)",
 	"push-tab-no-used-templates": "(இந்தப் பக்கத்தில் வார்ப்புருக்கள் எதுவும் பயன்படுத்தப்படவில்லை.)",
