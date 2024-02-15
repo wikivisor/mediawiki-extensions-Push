@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"A Chinese Wikipedian",
+			"Anterdc99",
 			"Cwek",
 			"Hudafu",
 			"Impersonator 1",
@@ -18,6 +19,7 @@
 	"right-bulkpush": "使用批量推送功能（即Special:Push）",
 	"action-pushadmin": "配置推送",
 	"right-pushadmin": "修改推送目标和推送设置",
+	"action-filepush": "将文件推送到其他wiki",
 	"right-filepush": "把文件放到其他的Wiki上",
 	"group-pusher": "推送者",
 	"group-pusher-member": "{{GENDER:$1|推送者}}",
