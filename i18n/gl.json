@@ -57,7 +57,7 @@
 	"push-tab-err-fileinfo": "Non se puideron obter os ficheiros empregados ​​nesta páxina. Ningún deles foi empurrado.",
 	"push-tab-err-filepush-unknown": "O empuxe do ficheiro fallou por unha razón descoñecida.",
 	"push-tab-err-filepush": "O empuxe do ficheiro fallou: $1",
-	"push-tab-embedded-files": "Ficheiros embelecidos:",
+	"push-tab-embedded-files": "Ficheiros incrustados:",
 	"push-tab-no-embedded-files": "(Non hai ningún ficheiro nesta páxina.)",
 	"push-tab-files-override": "{{PLURAL:$2|Este ficheiro xa existe|Estes ficheiros xa existen}}: $1",
 	"push-tab-template-override": "{{PLURAL:$2|Este modelo xa existe|Estes modelos xa existen}}: $1",
