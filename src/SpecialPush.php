@@ -301,7 +301,7 @@ class SpecialPush extends SpecialPage {
 	protected function getPagesFromCategory( Title $title ) {
 		$name = $title->getDBkey();
 
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
 		$res = $dbr->select(
 			[ 'page', 'categorylinks' ],
 			[ 'page_namespace', 'page_title' ],
@@ -335,7 +335,7 @@ class SpecialPush extends SpecialPage {
 	 * @return array
 	 */
 	protected function getPagesFromNamespace( $nsindex ) {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
 		$res = $dbr->select(
 			'page',
 			[ 'page_namespace', 'page_title' ],

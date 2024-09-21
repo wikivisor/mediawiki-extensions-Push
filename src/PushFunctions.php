@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 /**
  * Static class with utility methods for the Push extension.
  *
@@ -62,7 +64,7 @@ final class PushFunctions {
 	 * @return array
 	 */
 	protected static function getLinks( $inputPages, $pageSet, $table, $fields, $join ) {
-		$dbr = wfGetDB( DB_REPLICA );
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancer()->getConnection( DB_REPLICA );
 
 		foreach ( $inputPages as $page ) {
 			$title = Title::newFromText( $page );
