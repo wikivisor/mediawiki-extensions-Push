@@ -5,20 +5,20 @@
  * @author Jeroen De Dauw <jeroendedauw at gmail dot com>
  */
 
-$( function () {
-	var $resultList = $( '#pushResultList' );
-	var targets = mw.config.get( 'wgPushTargets' ) || [];
-	var pages = mw.config.get( 'wgPushPages' ) || [];
-	var requestAmount = Math.min( pages.length, mw.config.get( 'wgPushWorkerCount' ) || 0 );
-	var batchSize = Math.min( targets.length, mw.config.get( 'wgPushBatchSize' ) || 0 );
-	var pushedFiles = [];
+$( () => {
+	const $resultList = $( '#pushResultList' );
+	const targets = mw.config.get( 'wgPushTargets' ) || [];
+	const pages = mw.config.get( 'wgPushPages' ) || [];
+	let requestAmount = Math.min( pages.length, mw.config.get( 'wgPushWorkerCount' ) || 0 );
+	const batchSize = Math.min( targets.length, mw.config.get( 'wgPushBatchSize' ) || 0 );
+	const pushedFiles = [];
 
-	for ( var i = requestAmount; i > 0; i-- ) {
+	for ( let i = requestAmount; i > 0; i-- ) {
 		initiateNextPush();
 	}
 
 	function initiateNextPush() {
-		var page = pages.pop();
+		const page = pages.pop();
 
 		if ( page ) {
 			startPush( page, 0, null );
@@ -28,9 +28,9 @@ $( function () {
 	}
 
 	function appendAndScroll( item ) {
-		var $box = $( '#pushResultDiv' );
-		var $innerBox = $( '#pushResultDiv > .innerResultBox' );
-		var atBottom = Math.abs( $innerBox.offset().top ) + $box.height() + $box.offset().top >=
+		const $box = $( '#pushResultDiv' );
+		const $innerBox = $( '#pushResultDiv > .innerResultBox' );
+		const atBottom = Math.abs( $innerBox.offset().top ) + $box.height() + $box.offset().top >=
 			$innerBox.outerHeight();
 
 		$resultList.append( item );
@@ -47,8 +47,8 @@ $( function () {
 			appendAndScroll( $listItem );
 		}
 
-		var currentBatchLimit = Math.min( targetOffset + batchSize, targets.length );
-		var currentBatchStart = targetOffset;
+		const currentBatchLimit = Math.min( targetOffset + batchSize, targets.length );
+		const currentBatchStart = targetOffset;
 		if ( targetOffset < targets.length ) {
 			$listItem.text( $listItem.text() + '...' );
 
@@ -58,7 +58,7 @@ $( function () {
 				action: 'push',
 				page: pageName,
 				targets: targets.slice( currentBatchStart, currentBatchLimit ).join( '|' )
-			} ).done( function ( data ) {
+			} ).done( ( data ) => {
 				if ( data.error ) {
 					handleError( $listItem, pageName, data.error );
 				} else if ( data.length > 0 && data[ 0 ].edit && data[ 0 ].edit.captcha ) {
@@ -66,7 +66,7 @@ $( function () {
 				} else {
 					startPush( pageName, targetOffset, $listItem );
 				}
-			} ).fail( function ( errorCode, data ) {
+			} ).fail( ( errorCode, data ) => {
 				handleError( $listItem, pageName, data.error );
 			} );
 		} else {
@@ -86,13 +86,13 @@ $( function () {
 			prop: 'images',
 			titles: pageName,
 			imlimit: 500
-		} ).done( function ( data ) {
+		} ).done( ( data ) => {
 			if ( data.query ) {
-				var images = [];
-				for ( var page in data.query.pages ) {
+				const images = [];
+				for ( const page in data.query.pages ) {
 					if ( Object.prototype.hasOwnProperty.call( data.query.pages, page ) && data.query.pages[ page ].images ) {
-						for ( var i = data.query.pages[ page ].images.length - 1; i >= 0; i-- ) {
-							if ( data.query.pages[ page ].images[ i ].title.indexOf( pushedFiles ) === -1 ) {
+						for ( let i = data.query.pages[ page ].images.length - 1; i >= 0; i-- ) {
+							if ( !data.query.pages[ page ].images[ i ].title.includes( pushedFiles ) ) {
 								pushedFiles.push( data.query.pages[ page ].images[ i ].title );
 								images.push( data.query.pages[ page ].images[ i ].title );
 							}
@@ -101,7 +101,7 @@ $( function () {
 				}
 
 				if ( images.length > 0 ) {
-					var currentFile = images.pop();
+					const currentFile = images.pop();
 					startFilePush( pageName, images, 0, $listItem, currentFile );
 				} else {
 					completeItem( pageName, $listItem );
@@ -119,8 +119,8 @@ $( function () {
 			$listItem.text( $listItem.text() + '...' );
 		}
 
-		var currentBatchLimit = Math.min( targetOffset + batchSize, targets.length );
-		var currentBatchStart = targetOffset;
+		const currentBatchLimit = Math.min( targetOffset + batchSize, targets.length );
+		const currentBatchStart = targetOffset;
 
 		if ( targetOffset < targets.length ) {
 			$listItem.text( $listItem.text() + '...' );
@@ -131,14 +131,14 @@ $( function () {
 				action: 'pushimages',
 				images: fileName,
 				targets: targets.slice( currentBatchStart, currentBatchLimit ).join( '|' )
-			} ).done( function ( data ) {
-				var fail = false;
+			} ).done( ( data ) => {
+				let fail = false;
 
 				if ( data.error ) {
 					handleError( $listItem, pageName, { info: mw.msg( 'push-tab-err-filepush', data.error.info ) } );
 					fail = true;
 				} else {
-					for ( var i in data ) {
+					for ( const i in data ) {
 						if ( Object.prototype.hasOwnProperty.call( data, i ) ) {
 							if ( data[ i ].error ) {
 								handleError( $listItem, pageName, { info: mw.msg( 'push-tab-err-filepush', data[ i ].error.info ) } );
@@ -159,7 +159,7 @@ $( function () {
 			} );
 		} else {
 			if ( images.length > 0 ) {
-				var currentFile = images.pop();
+				const currentFile = images.pop();
 				startFilePush( pageName, images, 0, $listItem, currentFile );
 			} else {
 				completeItem( pageName, $listItem );

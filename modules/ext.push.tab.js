@@ -5,9 +5,9 @@
  * @author Jeroen De Dauw <jeroendedauw at gmail dot com>
  */
 
-$( function () {
+$( () => {
 
-	var pages,
+	let pages,
 		targetData = [],
 		$pushButton = $( '.push-button' ),
 		$pushAllButton = $( '#push-all-button' ),
@@ -22,7 +22,7 @@ $( function () {
 	$pushButton.on( 'click', function () {
 		this.disabled = true;
 
-		var $errorDiv = $( '#targeterrors' + $( this ).attr( 'targetid' ) );
+		const $errorDiv = $( '#targeterrors' + $( this ).attr( 'targetid' ) );
 		$errorDiv.fadeOut( 'fast' );
 
 		if ( $( '#checkIncTemplates' ).prop( 'checked' ) ) {
@@ -47,8 +47,8 @@ $( function () {
 	} );
 
 	$( '#divIncTemplates' ).on( 'hover',
-		function () {
-			var isHidden = $txtTemplateList.css( 'opacity' ) === 0;
+		() => {
+			const isHidden = $txtTemplateList.css( 'opacity' ) === 0;
 
 			if ( isHidden ) {
 				$txtTemplateList.css( 'display', 'inline' );
@@ -59,19 +59,19 @@ $( function () {
 				1
 			);
 		},
-		function () {
+		() => {
 			$txtTemplateList.fadeTo( 'fast', 0.5 );
 		}
-	).on( 'click', function () {
+	).on( 'click', () => {
 		setIncludeFilesText();
 		displayTargetsConflictStatus();
 	} );
 
-	$( '#divIncFiles' ).on( 'click', function () {
+	$( '#divIncFiles' ).on( 'click', () => {
 		displayTargetsConflictStatus();
 	} ).on( 'hover',
-		function () {
-			var isHidden = $txtFileList.css( 'opacity' ) === 0;
+		() => {
+			const isHidden = $txtFileList.css( 'opacity' ) === 0;
 
 			if ( isHidden ) {
 				$txtFileList.css( 'display', 'inline' );
@@ -83,14 +83,14 @@ $( function () {
 				1
 			);
 		},
-		function () {
+		() => {
 			$txtFileList.fadeTo( 'fast', 0.5 );
 		}
 	);
 
 	function setIncludeFilesText() {
 		if ( $checkIncFiles.length !== 0 ) {
-			var files = mw.config.get( 'wgPushPageFiles' );
+			let files = mw.config.get( 'wgPushPageFiles' );
 
 			if ( $( '#checkIncTemplates' ).prop( 'checked' ) ) {
 				files = files.concat( mw.config.get( 'wgPushTemplateFiles' ) );
@@ -99,7 +99,7 @@ $( function () {
 			if ( files.length > 0 ) {
 				$txtFileList.text( '(' + mw.msg( 'push-tab-embedded-files' ) + ' ' );
 
-				for ( var i in files ) {
+				for ( const i in files ) {
 					if ( Object.prototype.hasOwnProperty.call( files, i ) ) {
 						if ( i > 0 ) {
 							$txtFileList.append( ', ' );
@@ -120,7 +120,7 @@ $( function () {
 	}
 
 	function getRemoteArticleInfo( targetId, targetUrl ) {
-		var pageName = $( '#pageName' ).attr( 'value' );
+		const pageName = $( '#pageName' ).attr( 'value' );
 
 		$.getJSON(
 			targetUrl + '/api.php?callback=?',
@@ -135,15 +135,15 @@ $( function () {
 					.concat( mw.config.get( 'wgPushTemplateFiles' ) )
 					.join( '|' )
 			},
-			function ( data ) {
+			( data ) => {
 				if ( data.query ) {
-					var $infoDiv = $( '#targetinfo' + targetId );
+					const $infoDiv = $( '#targetinfo' + targetId );
 
-					var existingPages = [];
-					var remotePage = false;
-					var message;
+					const existingPages = [];
+					let remotePage = false;
+					let message;
 
-					for ( var remotePageId in data.query.pages ) {
+					for ( const remotePageId in data.query.pages ) {
 						if ( Object.prototype.hasOwnProperty.call( data.query.pages, remotePageId ) ) {
 							if ( remotePageId > 0 ) {
 								if ( data.query.pages[ remotePageId ].title === pageName ) {
@@ -160,8 +160,8 @@ $( function () {
 					if ( remotePage ) {
 						$( '#targetlink' + targetId ).attr( 'class', '' );
 
-						var revision = remotePage.revisions[ 0 ];
-						var dateTime = revision.timestamp.split( 'T' );
+						const revision = remotePage.revisions[ 0 ];
+						const dateTime = revision.timestamp.split( 'T' );
 
 						message = mw.msg(
 							'push-tab-last-edit',
@@ -190,7 +190,7 @@ $( function () {
 	}
 
 	function displayTargetConflictStatus( targetId ) {
-		var remotePageId;
+		let remotePageId;
 
 		if ( !targetData[ targetId ] ) {
 			// It's possible the request to retrieve this data failed, so don't do anything when this is the case.
@@ -198,7 +198,7 @@ $( function () {
 		}
 
 		if ( $( '#checkIncTemplates' ).prop( 'checked' ) ) {
-			var overrideTemplates = [];
+			const overrideTemplates = [];
 
 			for ( remotePageId in targetData[ targetId ].existingPages ) {
 				if ( Object.prototype.hasOwnProperty.call( targetData[ targetId ].existingPages, remotePageId ) ) {
@@ -224,7 +224,7 @@ $( function () {
 		}
 
 		if ( $checkIncFiles.length !== 0 && $checkIncFiles.prop( 'checked' ) ) {
-			var overideFiles = [];
+			const overideFiles = [];
 
 			for ( remotePageId in targetData[ targetId ].existingPages ) {
 				if ( Object.prototype.hasOwnProperty.call( targetData[ targetId ].existingPages, remotePageId ) ) {
@@ -257,7 +257,7 @@ $( function () {
 			action: 'push',
 			page: pages,
 			targets: targetUrl
-		} ).done( function ( data ) {
+		} ).done( ( data ) => {
 			if ( data.error ) {
 				handleError( sender, data.error );
 			} else if ( data[ 0 ] && data[ 0 ].error ) {
@@ -267,7 +267,7 @@ $( function () {
 			} else {
 				handlePushingCompletion( sender );
 			}
-		} ).fail( function ( errorCode, data ) {
+		} ).fail( ( errorCode, data ) => {
 			handleError( sender, data.error );
 		} );
 	}
@@ -275,16 +275,16 @@ $( function () {
 	function handlePushingCompletion( sender ) {
 		sender.textContent = mw.msg( 'push-button-completed' );
 
-		setTimeout( function () {
+		setTimeout( () => {
 			reEnableButton( sender );
 		}, 1000 );
 	}
 
 	function setButtonToImgPush( button, pages, targetUrl, targetName ) {
-		var images = mw.config.get( 'wgPushPageFiles' ).concat( mw.config.get( 'wgPushTemplateFiles' ) );
+		const images = mw.config.get( 'wgPushPageFiles' ).concat( mw.config.get( 'wgPushTemplateFiles' ) );
 
 		if ( images.length > 0 && $checkIncFiles.length !== 0 && $checkIncFiles.prop( 'checked' ) ) {
-			var currentFile = images.pop();
+			const currentFile = images.pop();
 			button.textContent = mw.msg( 'push-button-pushing-files' );
 			initiateImagePush( button, pages, targetUrl, targetName, images, currentFile );
 		} else {
@@ -297,15 +297,15 @@ $( function () {
 			action: 'pushimages',
 			images: fileName,
 			targets: targetUrl
-		} ).done( function ( data ) {
-			var fail = false;
+		} ).done( ( data ) => {
+			let fail = false;
 
 			if ( data.error ) {
 				data.error.info = mw.msg( 'push-tab-err-filepush', data.error.info );
 				handleError( sender, data.error );
 				fail = true;
 			} else {
-				for ( var i in data ) {
+				for ( const i in data ) {
 					if ( Object.prototype.hasOwnProperty.call( data, i ) ) {
 						if ( data[ i ].error ) {
 
@@ -331,13 +331,13 @@ $( function () {
 
 			if ( !fail ) {
 				if ( images.length > 0 ) {
-					var currentFile = images.pop();
+					const currentFile = images.pop();
 					initiateImagePush( sender, pages, targetUrl, targetName, images, currentFile );
 				} else {
 					initiatePush( sender, pages, targetUrl, targetName );
 				}
 			}
-		} ).fail( function ( errorCode, data ) {
+		} ).fail( ( errorCode, data ) => {
 			data.error.info = mw.msg( 'push-tab-err-filepush', data.error.info );
 			handleError( sender, data.error );
 		} );
@@ -352,7 +352,7 @@ $( function () {
 		// If there is a "push all" button, make sure to reset it
 		// when all other buttons have been reset.
 		if ( typeof $pushAllButton !== 'undefined' ) {
-			var hasDisabled = false;
+			let hasDisabled = false;
 
 			$pushButton.each( function () {
 				if ( this.disabled ) {
@@ -368,7 +368,7 @@ $( function () {
 	}
 
 	function handleError( sender, error ) {
-		var $errorDiv = $( '#targeterrors' + $( sender ).attr( 'targetid' ) );
+		const $errorDiv = $( '#targeterrors' + $( sender ).attr( 'targetid' ) );
 
 		if ( error.code && error.code === 'uploaddisabled' ) {
 			error.info = mw.msg( 'push-tab-err-uploaddisabled' );
@@ -378,7 +378,7 @@ $( function () {
 		$errorDiv.fadeIn( 'slow' );
 
 		sender.textContent = mw.msg( 'push-button-failed' );
-		setTimeout( function () {
+		setTimeout( () => {
 			reEnableButton( sender );
 		}, 2500 );
 	}
