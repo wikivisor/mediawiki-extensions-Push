@@ -47,7 +47,7 @@ final class PushFunctions {
 	public static function getTemplates( $inputPages, $pageSet ) {
 		return self::getLinks( $inputPages, $pageSet,
 			'templatelinks',
-			[ 'tl_namespace AS namespace', 'tl_title AS title' ],
+			[ 'tl_from_namespace AS namespace' ],
 			[ 'page_id=tl_from' ]
 		);
 	}
