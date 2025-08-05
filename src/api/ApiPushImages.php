@@ -130,8 +130,6 @@ class ApiPushImages extends ApiPushBase {
 			$req->setCookieJar( $this->cookieJars[$target] );
 		}
 
-		$req->setHeader( 'Content-Type', 'multipart/form-data' );
-
 		$status = $req->execute();
 
 		if ( $status->isOK() ) {
