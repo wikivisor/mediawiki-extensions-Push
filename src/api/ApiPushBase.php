@@ -117,7 +117,6 @@ abstract class ApiPushBase extends ApiBase {
 	 * @return string|false
 	 * @throws ApiUsageException
 	 * @since 0.3
-	 *
 	 */
 	protected function getToken( string $target, string $type ) {
 		$pushConfig = new GlobalVarConfig( 'egPush' );
