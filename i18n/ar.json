@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"Meno25",
+			"Mohammed Qays",
 			"ديفيد"
 		]
 	},
@@ -42,7 +43,7 @@
 	"push-tab-title": "دفع $1",
 	"push-targets": "أهداف الدفع",
 	"push-add-target": "إضافة هدف",
-	"push-import-revision-message": "تم الدفع من $1.",
+	"push-import-revision-message": "دُفع من $1.",
 	"push-tab-no-targets": "لا توجد أهداف للدفع إليها; تُرجَى إضافة البعض إلى ملف LocalSettings.php الخاص بك.",
 	"push-tab-push-to": "ادفع إلى $1",
 	"push-remote-pages": "الصفحات البعيدة",
