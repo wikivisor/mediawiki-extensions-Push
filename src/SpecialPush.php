@@ -1,6 +1,8 @@
 <?php
 
+use MediaWiki\Html\Html;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Title\Title;
 
 /**
  * A special page that allows pushing one or more pages to one or more targets.

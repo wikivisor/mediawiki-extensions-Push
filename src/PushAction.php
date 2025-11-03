@@ -1,7 +1,10 @@
 <?php
 
+use MediaWiki\Html\Html;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Permissions\PermissionManager;
+use MediaWiki\Request\FauxRequest;
+use MediaWiki\Title\Title;
 
 class PushAction extends Action {
 

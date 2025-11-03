@@ -1,6 +1,7 @@
 <?php
 
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Title\Title;
 
 /**
  * API module to push images to other MediaWiki wikis.
