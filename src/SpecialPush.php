@@ -30,7 +30,11 @@ class SpecialPush extends SpecialPage {
 	 * @inheritDoc
 	 */
 	public function getDescription() {
-		return $this->msg( 'special-' . strtolower( $this->getName() ) )->text();
+		$msg = $this->msg( 'special-' . strtolower( $this->getName() ) );
+		if ( version_compare( MW_VERSION, '1.40', '>' ) ) {
+			return $msg;
+		}
+		return $msg->text();
 	}
 
 	/**
@@ -40,7 +44,11 @@ class SpecialPush extends SpecialPage {
 		$out = $this->getOutput();
 		$out->setArticleRelated( false );
 		$out->setRobotPolicy( "noindex,nofollow" );
-		$out->setPageTitle( $this->getDescription() );
+		if ( version_compare( MW_VERSION, '1.40', '>' ) ) {
+			$out->setPageTitleMsg( $this->getDescription() );
+		} else {
+			$out->setPageTitle( $this->getDescription() );
+		}
 	}
 
 	/**
