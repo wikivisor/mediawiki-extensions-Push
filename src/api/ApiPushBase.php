@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\Config\GlobalVarConfig;
 use MediaWiki\MediaWikiServices;
 
 abstract class ApiPushBase extends ApiBase {

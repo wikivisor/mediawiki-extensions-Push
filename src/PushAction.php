@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\Config\GlobalVarConfig;
 use MediaWiki\Html\Html;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Permissions\PermissionManager;
