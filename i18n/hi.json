@@ -1,10 +1,15 @@
 {
 	"@metadata": {
 		"authors": [
+			"Saurmandal",
 			"Sfic",
 			"Susant purohit"
 		]
 	},
+	"action-bulkpush": "पृष्ठों को थोक पुश करने",
+	"right-bulkpush": "थोक पुश कार्यक्षमता (यानी Special:Push) का उपयोग करना",
+	"action-pushadmin": "पुश कॉन्फ़िगर करने",
+	"right-pushadmin": "पुश लक्ष्य और पुश सेटिंग्स संशोधित करना",
 	"push-tab-last-edit": "अंतिम संपादन $1 के द्वारा $2 को $3 बजे किया गया।",
 	"apihelp-push-param-page": "पृस्था का नाम आगे बढ़ाएं",
 	"apihelp-push-param-targets": "विकी का URL को आगे बढ़ाएं",
