@@ -3,10 +3,11 @@
 		"authors": [
 			"Les Meloures",
 			"Robby",
-			"Soued031"
+			"Soued031",
+			"Volvox"
 		]
 	},
-	"push-desc": "Erweiderung déi en einfachen Transfert (Push) vun Inhalt op aner Wikien erméiglecht",
+	"push-desc": "Erweiderung, déi en einfachen Transfert (Push) vun Inhalt op aner Wikien erméiglecht",
 	"action-push": "Säite transferéieren",
 	"right-push": "Push-Funktionalitéit ze benotzen",
 	"action-bulkpush": "vill Säite mateneen ze transferéieren",
