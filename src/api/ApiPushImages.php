@@ -12,166 +12,187 @@ use MediaWiki\MediaWikiServices;
  *
  * @author Jeroen De Dauw < jeroendedauw@gmail.com >
  */
-class ApiPushImages extends ApiPushBase {
+class ApiPushImages extends ApiPushBase
+{
+    public function __construct($main, $action)
+    {
+        parent::__construct($main, $action);
+    }
 
-	public function __construct( $main, $action ) {
-		parent::__construct( $main, $action );
-	}
+    /**
+     * @param array $targetsForProcessing We have to process defined targets only for security reasons
+     */
+    public function doModuleExecute(array $targetsForProcessing)
+    {
+        $params = $this->extractRequestParams();
 
-	/**
-	 * @param array $targetsForProcessing We have to process defined targets only for security reasons
-	 */
-	public function doModuleExecute( array $targetsForProcessing ) {
-		$params = $this->extractRequestParams();
+        foreach ($params["images"] as $image) {
+            $title = Title::newFromText($image, NS_FILE);
+            if (
+                $title !== null &&
+                $title->getNamespace() == NS_FILE &&
+                $title->exists()
+            ) {
+                $this->doPush($title, $targetsForProcessing);
+            }
+        }
+    }
 
-		foreach ( $params['images'] as $image ) {
-			$title = Title::newFromText( $image, NS_FILE );
-			if ( $title !== null && $title->getNamespace() == NS_FILE && $title->exists() ) {
-				$this->doPush( $title, $targetsForProcessing );
-			}
-		}
-	}
+    /**
+     * Pushes the page content to the target wikis.
+     *
+     * @since 0.5
+     *
+     * @param Title $title
+     * @param array $targets
+     */
+    protected function doPush(Title $title, array $targets)
+    {
+        $hookContainer = MediaWikiServices::getInstance()->getHookContainer();
+        foreach ($targets as $target) {
+            $token = $this->getToken($target, "csrf");
 
-	/**
-	 * Pushes the page content to the target wikis.
-	 *
-	 * @since 0.5
-	 *
-	 * @param Title $title
-	 * @param array $targets
-	 */
-	protected function doPush( Title $title, array $targets ) {
-		$hookContainer = MediaWikiServices::getInstance()->getHookContainer();
-		foreach ( $targets as $target ) {
-			$token = $this->getToken( $target, 'csrf' );
+            if ($token !== false) {
+                $doPush = true;
 
-			if ( $token !== false ) {
-				$doPush = true;
+                $hookContainer->run("PushAPIBeforeImagePush", [
+                    &$title,
+                    &$target,
+                    &$token,
+                    &$doPush,
+                ]);
 
-				$hookContainer->run( 'PushAPIBeforeImagePush', [ &$title, &$target, &$token, &$doPush ] );
+                if ($doPush) {
+                    $this->pushToTarget($title, $target, $token);
+                }
+            }
+        }
+    }
 
-				if ( $doPush ) {
-					$this->pushToTarget( $title, $target, $token );
-				}
-			}
-		}
-	}
+    /**
+     * Pushes the image to the specified wiki.
+     *
+     * @since 0.5
+     *
+     * @param Title $title
+     * @param string $target
+     * @param string $token
+     */
+    protected function pushToTarget(Title $title, $target, $token)
+    {
+        global $egPushDirectFileUploads;
 
-	/**
-	 * Pushes the image to the specified wiki.
-	 *
-	 * @since 0.5
-	 *
-	 * @param Title $title
-	 * @param string $target
-	 * @param string $token
-	 */
-	protected function pushToTarget( Title $title, $target, $token ) {
-		global $egPushDirectFileUploads;
+        $pushConfig = new GlobalVarConfig("egPush");
+        $imagePage = new ImagePage($title);
 
-		$pushConfig = new GlobalVarConfig( 'egPush' );
-		$imagePage = new ImagePage( $title );
+        $requestData = [
+            "action" => "upload",
+            "format" => "json",
+            "token" => $token,
+            "filename" => $title->getText(),
+            "ignorewarnings" => "1",
+        ];
 
-		$requestData = [
-			'action' => 'upload',
-			'format' => 'json',
-			'token' => $token,
-			'filename' => $title->getText(),
-			'ignorewarnings' => '1'
-		];
+        if ($egPushDirectFileUploads) {
+            $file = $imagePage->getFile();
+            $be = $file->getRepo()->getBackend();
+            $localFile = $be->getLocalReference(["src" => $file->getPath()]);
+            if (function_exists("curl_file_create")) {
+                $requestData["file"] = curl_file_create($localFile->getPath());
+            } else {
+                $requestData["file"] = "@" . $localFile->getPath();
+            }
+        } else {
+            $requestData["url"] = $imagePage->getDisplayedFile()->getFullUrl();
+        }
 
-		if ( $egPushDirectFileUploads ) {
-			$file = $imagePage->getFile();
-			$be = $file->getRepo()->getBackend();
-			$localFile = $be->getLocalReference(
-				[ 'src' => $file->getPath() ]
-			);
-			if ( function_exists( 'curl_file_create' ) ) {
-				$requestData['file'] = curl_file_create( $localFile->getPath() );
-			} else {
-				$requestData['file'] = '@' . $localFile->getPath();
-			}
-		} else {
-			$requestData['url'] = $imagePage->getDisplayedFile()->getFullUrl();
-		}
+        $reqArgs = [
+            "method" => "POST",
+            "timeout" => "default",
+            "postData" => $requestData,
+            "sslVerifyCert" => $pushConfig->get("VerifySSL"),
+            "sslVerifyHost" => $pushConfig->get("VerifySSL"),
+        ];
 
-		$reqArgs = [
-			'method' => 'POST',
-			'timeout' => 'default',
-			'postData' => $requestData,
-			'sslVerifyCert' => $pushConfig->get( 'VerifySSL' ),
-			'sslVerifyHost' => $pushConfig->get( 'VerifySSL' )
-		];
+        if ($egPushDirectFileUploads) {
+            if (!function_exists("curl_init")) {
+                $this->dieWithError(
+                    wfMessage("push-api-err-nocurl")->text(),
+                    "image-push-nocurl",
+                );
+            } elseif (
+                !defined("CurlHttpRequest::SUPPORTS_FILE_POSTS") ||
+                !CurlHttpRequest::SUPPORTS_FILE_POSTS
+            ) {
+                $this->dieWithError(
+                    wfMessage("push-api-err-nofilesupport")->text(),
+                    "image-push-nofilesupport",
+                );
+            } else {
+                $req = MediaWikiServices::getInstance()
+                    ->getHttpRequestFactory()
+                    ->create($target, $reqArgs, __METHOD__);
+            }
+        } else {
+            $req = MediaWikiServices::getInstance()
+                ->getHttpRequestFactory()
+                ->create($target, $reqArgs, __METHOD__);
+        }
 
-		if ( $egPushDirectFileUploads ) {
-			if ( !function_exists( 'curl_init' ) ) {
-				$this->dieWithError(
-					wfMessage( 'push-api-err-nocurl' )->text(),
-					'image-push-nocurl'
-				);
-			} elseif (
-				!defined( 'CurlHttpRequest::SUPPORTS_FILE_POSTS' )
-				|| !CurlHttpRequest::SUPPORTS_FILE_POSTS
-			) {
-				$this->dieWithError(
-					wfMessage( 'push-api-err-nofilesupport' )->text(),
-					'image-push-nofilesupport'
-				);
-			} else {
-				$req = MediaWikiServices::getInstance()->getHttpRequestFactory()
-					->create( $target, $reqArgs, __METHOD__ );
-			}
-		} else {
-			$req = MediaWikiServices::getInstance()->getHttpRequestFactory()
-				->create( $target, $reqArgs, __METHOD__ );
-		}
+        if (array_key_exists($target, $this->cookieJars)) {
+            $req->setCookieJar($this->cookieJars[$target]);
+        }
 
-		if ( array_key_exists( $target, $this->cookieJars ) ) {
-			$req->setCookieJar( $this->cookieJars[$target] );
-		}
+        $req->setHeader("Content-Type", "multipart/form-data");
 
-		$req->setHeader( 'Content-Type', 'multipart/form-data' );
+        $status = $req->execute();
 
-		$status = $req->execute();
+        if ($status->isOK()) {
+            $response = $req->getContent();
 
-		if ( $status->isOK() ) {
-			$response = $req->getContent();
+            $this->getResult()->addValue(
+                null,
+                null,
+                FormatJson::decode($response),
+            );
 
-			$this->getResult()->addValue(
-				null,
-				null,
-				FormatJson::decode( $response )
-			);
+            MediaWikiServices::getInstance()
+                ->getHookContainer()
+                ->run("PushAPIAfterImagePush", [
+                    $title,
+                    $target,
+                    $token,
+                    $response,
+                ]);
+        } else {
+            //			$this->dieWithError( wfMessage( 'push-special-err-push-failed' )->text(), 'page-push-failed' );
+        }
+    }
 
-			MediaWikiServices::getInstance()->getHookContainer()
-				->run( 'PushAPIAfterImagePush', [ $title, $target, $token, $response ] );
-		} else {
-			$this->dieWithError( wfMessage( 'push-special-err-push-failed' )->text(), 'page-push-failed' );
-		}
-	}
+    public function getAllowedParams()
+    {
+        return [
+            "images" => [
+                ApiBase::PARAM_TYPE => "string",
+                ApiBase::PARAM_ISMULTI => true,
+                ApiBase::PARAM_REQUIRED => true,
+            ],
+            "targets" => [
+                ApiBase::PARAM_TYPE => "string",
+                ApiBase::PARAM_ISMULTI => true,
+                ApiBase::PARAM_REQUIRED => true,
+            ],
+        ];
+    }
 
-	public function getAllowedParams() {
-		return [
-			'images' => [
-				ApiBase::PARAM_TYPE => 'string',
-				ApiBase::PARAM_ISMULTI => true,
-				ApiBase::PARAM_REQUIRED => true,
-			],
-			'targets' => [
-				ApiBase::PARAM_TYPE => 'string',
-				ApiBase::PARAM_ISMULTI => true,
-				ApiBase::PARAM_REQUIRED => true,
-			],
-		];
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	protected function getExamplesMessages() {
-		return [
-			'action=pushimages&images=File:Foo.bar&targets=http://en.wikipedia.org/w'
-				=> 'apihelp-pushimages-example',
-		];
-	}
+    /**
+     * @inheritDoc
+     */
+    protected function getExamplesMessages()
+    {
+        return [
+            "action=pushimages&images=File:Foo.bar&targets=http://en.wikipedia.org/w" =>
+                "apihelp-pushimages-example",
+        ];
+    }
 }
