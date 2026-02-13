@@ -1,6 +1,8 @@
 <?php
 
+use MediaWiki\Config\GlobalVarConfig;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Title\Title;
 
 /**
  * API module to push images to other MediaWiki wikis.
@@ -109,6 +111,7 @@ class ApiPushImages extends ApiPushBase
         $reqArgs = [
             "method" => "POST",
             "timeout" => "default",
+            "connectTimeout" => "default",
             "postData" => $requestData,
             "sslVerifyCert" => $pushConfig->get("VerifySSL"),
             "sslVerifyHost" => $pushConfig->get("VerifySSL"),

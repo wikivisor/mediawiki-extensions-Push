@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\Config\GlobalVarConfig;
 use MediaWiki\MediaWikiServices;
 
 abstract class ApiPushBase extends ApiBase {
@@ -56,6 +57,7 @@ abstract class ApiPushBase extends ApiBase {
 				'postData' => $requestData,
 				'method' => 'POST',
 				'timeout' => 'default',
+				'connectTimeout' => 'default',
 				'sslVerifyCert' => $pushConfig->get( 'VerifySSL' ),
 				'sslVerifyHost' => $pushConfig->get( 'VerifySSL' )
 			],
@@ -134,6 +136,7 @@ abstract class ApiPushBase extends ApiBase {
 			[
 				'method' => 'GET',
 				'timeout' => 'default',
+				'connectTimeout' => 'default',
 				'sslVerifyCert' => $pushConfig->get( 'VerifySSL' ),
 				'sslVerifyHost' => $pushConfig->get( 'VerifySSL' )
 			],

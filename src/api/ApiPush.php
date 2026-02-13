@@ -1,6 +1,9 @@
 <?php
 
+use MediaWiki\Config\GlobalVarConfig;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Request\FauxRequest;
+use MediaWiki\Title\Title;
 
 /**
  * API module to push wiki pages to other MediaWiki wikis.
@@ -69,6 +72,7 @@ class ApiPush extends ApiPushBase
             "format" => "json",
             "prop" => "revisions",
             "rvprop" => "timestamp|user|comment|content",
+            "rvslots" => "main",
             "titles" => $title->getFullText(),
             "rvstartid" => $revId,
             "rvendid" => $revId,
@@ -187,7 +191,7 @@ class ApiPush extends ApiPushBase
             "title" => $title->getFullText(),
             "format" => "json",
             "summary" => $summary,
-            "text" => $revision["*"],
+            "text" => $this->extractRevisionContent( $revision ),
             "token" => $token,
         ];
 
@@ -198,6 +202,7 @@ class ApiPush extends ApiPushBase
                 [
                     "method" => "POST",
                     "timeout" => "default",
+                    "connectTimeout" => "default",
                     "postData" => $requestData,
                     "sslVerifyCert" => $pushConfig->get("VerifySSL"),
                     "sslVerifyHost" => $pushConfig->get("VerifySSL"),
@@ -253,5 +258,39 @@ class ApiPush extends ApiPushBase
             "action=push&page=Main page&targets=http://en.wikipedia.org/w" =>
                 "apihelp-push-example",
         ];
+    }
+
+    /**
+     * Get revision content for both legacy and slot-based API responses.
+     *
+     * @param array $revision
+     * @return string
+     */
+    private function extractRevisionContent( array $revision ) {
+        if ( array_key_exists( '*', $revision ) ) {
+            return (string)$revision['*'];
+        }
+
+        if (
+            array_key_exists( 'slots', $revision )
+            && is_array( $revision['slots'] )
+            && array_key_exists( 'main', $revision['slots'] )
+            && is_array( $revision['slots']['main'] )
+        ) {
+            $mainSlot = $revision['slots']['main'];
+
+            if ( array_key_exists( '*', $mainSlot ) ) {
+                return (string)$mainSlot['*'];
+            }
+
+            if ( array_key_exists( 'content', $mainSlot ) ) {
+                return (string)$mainSlot['content'];
+            }
+        }
+
+        $this->dieWithError(
+            wfMessage( 'push-special-err-pageget-failed' )->text(),
+            'page-get-failed'
+        );
     }
 }

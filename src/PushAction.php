@@ -1,7 +1,11 @@
 <?php
 
+use MediaWiki\Config\GlobalVarConfig;
+use MediaWiki\Html\Html;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Permissions\PermissionManager;
+use MediaWiki\Request\FauxRequest;
+use MediaWiki\Title\Title;
 
 class PushAction extends Action {
 
@@ -313,7 +317,7 @@ class PushAction extends Action {
 		// Include current page file if the page being pushed is within NS_FILE namespace
 		if ( $this->getTitle()->getNamespace() === NS_FILE ) {
 			$file = $this->repoGroup->findFile( $this->getTitle() );
-			if ( $file->isLocal() ) {
+			if ( $file && $file->isLocal() ) {
 				if ( !in_array( $this->getTitle()->getFullText(), $templateFiles ) ) {
 					$pageFiles[] = $this->getTitle()->getFullText();
 				}
